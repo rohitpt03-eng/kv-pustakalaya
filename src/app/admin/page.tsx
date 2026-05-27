@@ -29,11 +29,11 @@ export default function AdminLoginPage() {
 
     // Small delay to simulate verification
     setTimeout(() => {
-      if (username === 'admin' && password === 'admin123') {
+      if (username === 'rohitpt03' && password === 'Rohit2009@@') {
         sessionStorage.setItem('kv_admin_session', 'true');
         router.push('/admin/dashboard');
       } else {
-        setError('Invalid username or password. Please use admin / admin123.');
+        setError('Invalid username or password. Please try again.');
         setIsLoading(false);
       }
     }, 800);

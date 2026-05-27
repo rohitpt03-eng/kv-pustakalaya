@@ -5,7 +5,6 @@ import AnnouncementBar from "@/components/AnnouncementBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import FestivePopup from "@/components/FestivePopup";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,7 +49,6 @@ export default function RootLayout({
         </main>
         <Footer />
         <WhatsAppButton />
-        <FestivePopup />
       </body>
     </html>
   );

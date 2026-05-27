@@ -87,13 +87,21 @@ export default function ContactPage() {
 
             {/* Info Cards */}
             <div className="space-y-4">
-              <div className="flex items-start gap-3 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                <MapPin className="w-5 h-5 text-sky-600 mt-0.5 shrink-0" />
+              <a
+                href="https://maps.app.goo.gl/57sSqyQ89uP3BFyH6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:border-sky-500 transition-colors group block"
+              >
+                <MapPin className="w-5 h-5 text-sky-600 mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
                 <div>
-                  <h3 className="font-bold text-slate-900 text-sm">Store Location</h3>
-                  <p className="text-slate-600 text-xs mt-1">Harari Chowk, Bihar</p>
+                  <h3 className="font-bold text-slate-900 text-sm flex items-center gap-1">
+                    <span>Store Location</span>
+                    <span className="text-3xs bg-sky-50 text-sky-700 px-1.5 py-0.5 rounded border border-sky-100 font-bold uppercase tracking-wider">Directions</span>
+                  </h3>
+                  <p className="text-slate-600 text-xs mt-1 group-hover:text-sky-600 transition-colors">Harari Chowk, Bihar</p>
                 </div>
-              </div>
+              </a>
 
               <div className="flex items-start gap-3 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
                 <Clock className="w-5 h-5 text-sky-600 mt-0.5 shrink-0" />
@@ -225,7 +233,7 @@ export default function ContactPage() {
             <div className="rounded-3xl overflow-hidden shadow-sm border border-slate-200 aspect-video w-full bg-white relative">
               <iframe
                 title="KV Pustakalaya Map Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3581.428784381832!2d86.0825!3d26.1555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjbCsDA5JzE5LjgiTiA4NsKwMDQnNTcuMCJF!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3581.428784381832!2d86.0825!3d26.1555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ee656413f744e1%3A0x448251f375254e32!2sKv%20Pustakalaya!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
                 className="absolute inset-0 w-full h-full border-0"
                 allowFullScreen={false}
                 loading="lazy"

@@ -307,47 +307,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6. LATEST OFFERS BANNERS */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-              Special Offers
-            </h2>
-            <p className="text-sm text-slate-500 mt-2">
-              Avail massive savings on student combos and school packages.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {offers.map((offer) => (
-              <div
-                key={offer.id}
-                className="relative overflow-hidden rounded-3xl brand-gradient text-white p-8 sm:p-10 flex flex-col justify-between min-h-60 shadow-lg border border-sky-800"
-              >
-                {/* Visual Glow */}
-                <div className="absolute right-0 bottom-0 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
-                
-                <div className="space-y-3 relative z-10 max-w-md">
-                  <span className="inline-block bg-yellow-400 text-slate-950 font-bold text-xs uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
-                    {offer.discount}
-                  </span>
-                  <h3 className="text-2xl sm:text-3xl font-black">{offer.title}</h3>
-                  <p className="text-sm text-sky-100">{offer.subtitle}</p>
-                </div>
-                <div className="pt-6 relative z-10">
-                  <Link
-                    href="/products"
-                    className="inline-flex items-center gap-1.5 bg-white text-sky-700 px-6 py-2.5 rounded-full font-bold text-sm hover:bg-sky-50 shadow-md hover:scale-102 transition-all"
-                  >
-                    <span>View Deal</span>
-                    <ChevronRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* 7. WHY CHOOSE KV PUSTAKALAYA */}
       <section className="py-16 bg-slate-950 text-white relative overflow-hidden">
@@ -504,13 +463,21 @@ export default function Home() {
               </div>
 
               <div className="space-y-4 text-sm">
-                <div className="flex items-start gap-3 bg-white p-4 rounded-2xl border border-slate-200/60">
-                  <MapPin className="w-5 h-5 text-sky-600 mt-0.5 shrink-0" />
+                <a
+                  href="https://maps.app.goo.gl/57sSqyQ89uP3BFyH6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3 bg-white p-4 rounded-2xl border border-slate-200/60 hover:border-sky-500 transition-colors group block"
+                >
+                  <MapPin className="w-5 h-5 text-sky-600 mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
                   <div>
-                    <h3 className="font-bold text-slate-900">Address</h3>
-                    <p className="text-slate-600 mt-0.5">Harari Chowk, Bihar</p>
+                    <h3 className="font-bold text-slate-900 flex items-center gap-1">
+                      <span>Address</span>
+                      <span className="text-3xs bg-sky-50 text-sky-700 px-1.5 py-0.5 rounded border border-sky-100 font-bold uppercase tracking-wider">Directions</span>
+                    </h3>
+                    <p className="text-slate-600 mt-0.5 group-hover:text-sky-600 transition-colors">Harari Chowk, Bihar</p>
                   </div>
-                </div>
+                </a>
 
                 <div className="flex items-start gap-3 bg-white p-4 rounded-2xl border border-slate-200/60">
                   <Clock className="w-5 h-5 text-sky-600 mt-0.5 shrink-0" />
@@ -553,7 +520,7 @@ export default function Home() {
             <div className="lg:col-span-7 rounded-3xl overflow-hidden shadow-md border border-slate-200 min-h-80 bg-white relative">
               <iframe
                 title="KV Pustakalaya Location at Harari Chowk"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3581.428784381832!2d86.0825!3d26.1555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjbCsDA5JzE5LjgiTiA4NsKwMDQnNTcuMCJF!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3581.428784381832!2d86.0825!3d26.1555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ee656413f744e1%3A0x448251f375254e32!2sKv%20Pustakalaya!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
                 className="absolute inset-0 w-full h-full border-0"
                 allowFullScreen={false}
                 loading="lazy"
