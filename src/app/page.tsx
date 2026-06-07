@@ -133,22 +133,22 @@ export default function Home() {
             </div>
 
             {/* Right Hero Brand Visual */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full bg-sky-950/40 p-4 border border-sky-900/30 flex items-center justify-center animate-in fade-in zoom-in duration-700">
+            <div className="lg:col-span-5 flex justify-center w-full">
+              <div className="relative w-full max-w-lg aspect-[3/2] rounded-2xl bg-sky-950/40 p-2 border border-sky-900/30 flex items-center justify-center animate-in fade-in zoom-in duration-700 shadow-2xl">
                 {/* Floating Elements */}
-                <div className="absolute top-12 left-10 bg-sky-600 text-white text-xs px-3.5 py-1.5 rounded-full font-bold shadow-md animate-bounce">
+                <div className="absolute -top-3.5 -left-2 bg-sky-600 text-white text-xs px-3.5 py-1.5 rounded-full font-bold shadow-md animate-bounce z-10">
                   ✏️ Stationery
                 </div>
-                <div className="absolute bottom-10 right-6 bg-emerald-600 text-white text-xs px-3.5 py-1.5 rounded-full font-bold shadow-md animate-bounce delay-300">
+                <div className="absolute -bottom-3.5 -right-2 bg-emerald-600 text-white text-xs px-3.5 py-1.5 rounded-full font-bold shadow-md animate-bounce delay-300 z-10">
                   📚 Exam Books
                 </div>
 
-                <div className="w-full h-full rounded-full bg-white flex items-center justify-center shadow-2xl overflow-hidden p-6 relative border-8 border-sky-950">
+                <div className="w-full h-full rounded-xl overflow-hidden relative border-4 border-sky-950 bg-slate-950 flex items-center justify-center">
                   <Image
-                    src="/logo.png"
-                    alt="KV Pustakalaya Logo"
+                    src="/banner.jpg"
+                    alt="KV Digitel Center & KV Pustakalaya Banner"
                     fill
-                    className="object-contain p-6"
+                    className="object-cover"
                     priority
                   />
                 </div>
