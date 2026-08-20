@@ -104,10 +104,10 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`text-sm font-extrabold transition-colors hover:text-sky-700 ${
+                className={`text-sm font-extrabold transition-all ${
                   isActive(link.href)
-                    ? 'text-sky-700 border-b-2 border-sky-400 pb-1'
-                    : 'text-slate-650'
+                    ? 'bg-[#9DE8FF]/35 text-sky-900 border border-white/40 px-3.5 py-1.5 rounded-full shadow-inner shadow-cyan-200/20'
+                    : 'text-slate-655 hover:text-slate-900 px-3.5 py-1.5 border border-transparent transition-all'
                 }`}
               >
                 {link.name}
@@ -126,10 +126,10 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-
+ 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="lg:hidden bg-white/95 border-b border-slate-100 shadow-inner px-4 pt-4 pb-6 space-y-4">
+        <div className="lg:hidden crystal-glass border-b border-white/50 px-4 pt-4 pb-6 space-y-4 backdrop-blur-md">
           {/* Mobile Search */}
           <form onSubmit={handleSearchSubmit} className="relative w-full">
             <input
@@ -137,7 +137,7 @@ export default function Navbar() {
               placeholder="Search items..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-full py-2.5 pl-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="w-full bg-white/35 border border-white/60 rounded-full py-2.5 pl-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:bg-white/60 text-slate-900 placeholder-slate-500 transition-all backdrop-blur-sm"
             />
             <button
               type="submit"
@@ -146,7 +146,7 @@ export default function Navbar() {
               <Search className="w-4 h-4" />
             </button>
           </form>
-
+ 
           {/* Mobile Links */}
           <div className="flex flex-col space-y-2">
             {navLinks.map((link) => (
@@ -154,10 +154,10 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`px-3 py-2.5 rounded-lg text-base font-semibold transition-colors ${
+                className={`px-3 py-2.5 rounded-xl text-base font-bold transition-all border ${
                   isActive(link.href)
-                    ? 'bg-sky-50 text-sky-600'
-                    : 'text-slate-600 hover:bg-slate-50'
+                    ? 'bg-[#9DE8FF]/30 text-sky-900 border-white/40 shadow-inner shadow-cyan-200/10'
+                    : 'text-slate-650 border-transparent hover:bg-white/20 hover:text-slate-900'
                 }`}
               >
                 {link.name}
