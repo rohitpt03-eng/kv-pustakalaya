@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import ThreeDHero from '@/components/ThreeDHero';
 import { db, Product, Category, Offer } from '@/lib/db';
 import { 
   CreditCard, 
@@ -64,8 +65,10 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       
       {/* 1. HERO BANNER & SERVICES HIGHLIGHT */}
-      <section className="relative overflow-hidden bg-transparent text-[#17202A] pt-10 pb-16 lg:pt-16 lg:pb-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-transparent text-[#17202A] pt-10 pb-16 lg:pt-16 lg:pb-24 min-h-[90vh] flex items-center">
+        {/* 3D WebGL Interactive Environment */}
+        <ThreeDHero />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             {/* Left Hero Content */}
