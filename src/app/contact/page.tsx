@@ -56,13 +56,14 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="flex-grow bg-slate-50 min-h-screen pb-16">
+    <div className="flex-grow bg-transparent min-h-screen pb-16">
       
       {/* Page Header */}
-      <div className="bg-slate-900 text-white py-12 text-center border-b border-sky-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight">Contact Us</h1>
-          <p className="text-sm sm:text-base text-sky-200">
+      <div className="relative py-12 text-center mt-6 max-w-7xl mx-auto crystal-glass border border-white/50 shadow-sm rounded-3xl overflow-hidden backdrop-blur-md">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#9DE8FF]/10 to-[#DDD6FF]/10 -z-10"></div>
+        <div className="relative z-10 space-y-2">
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-950">Contact Us</h1>
+          <p className="text-sm sm:text-base text-slate-700 font-medium">
             Have questions about syllabus books, forms, or cash services? Send us a message!
           </p>
         </div>
@@ -74,13 +75,13 @@ export default function ContactPage() {
           {/* Left Column: Direct Info Details */}
           <div className="lg:col-span-5 space-y-8">
             <div className="space-y-4">
-              <span className="inline-block bg-sky-50 text-sky-700 border border-sky-100 rounded-full px-3.5 py-1 text-xs font-bold uppercase tracking-wider">
+              <span className="inline-block bg-white/40 text-sky-850 border border-white/60 rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider shadow-sm backdrop-blur-sm">
                 Store Location
               </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-snug">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-snug">
                 Connect with KV Pustakalaya
               </h2>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-655 font-medium leading-relaxed">
                 Drop by our shop at Harari Chowk for offline services, or reach out to us using the direct channels below.
               </p>
             </div>
@@ -91,43 +92,43 @@ export default function ContactPage() {
                 href="https://maps.app.goo.gl/57sSqyQ89uP3BFyH6"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:border-sky-500 transition-colors group block"
+                className="flex items-start gap-3 crystal-glass-interactive p-5 rounded-2xl border border-white/50 shadow-sm group block"
               >
-                <MapPin className="w-5 h-5 text-sky-600 mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
+                <MapPin className="w-5 h-5 text-sky-655 mt-0.5 shrink-0 group-hover:scale-110 transition-transform" />
                 <div>
-                  <h3 className="font-bold text-slate-900 text-sm flex items-center gap-1">
+                  <h3 className="font-extrabold text-slate-900 text-sm flex items-center gap-1">
                     <span>Store Location</span>
-                    <span className="text-3xs bg-sky-50 text-sky-700 px-1.5 py-0.5 rounded border border-sky-100 font-bold uppercase tracking-wider">Directions</span>
+                    <span className="text-3xs bg-white/60 text-sky-800 px-1.5 py-0.5 rounded border border-white font-bold uppercase tracking-wider shadow-inner">Directions</span>
                   </h3>
-                  <p className="text-slate-600 text-xs mt-1 group-hover:text-sky-600 transition-colors">Harari Chowk, Bihar</p>
+                  <p className="text-slate-655 text-xs mt-1 group-hover:text-sky-850 transition-colors font-medium">Harari Chowk, Bihar</p>
                 </div>
               </a>
 
-              <div className="flex items-start gap-3 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                <Clock className="w-5 h-5 text-sky-600 mt-0.5 shrink-0" />
+              <div className="flex items-start gap-3 crystal-glass p-5 rounded-2xl border border-white/50 shadow-sm">
+                <Clock className="w-5 h-5 text-sky-655 mt-0.5 shrink-0" />
                 <div>
-                  <h3 className="font-bold text-slate-900 text-sm">Working Hours</h3>
-                  <p className="text-slate-600 text-xs mt-1">09:00 AM to 08:00 PM (Daily)</p>
-                  <p className="text-3xs text-sky-600 font-semibold uppercase mt-0.5">Closed on festivals only</p>
+                  <h3 className="font-extrabold text-slate-900 text-sm">Working Hours</h3>
+                  <p className="text-slate-655 text-xs mt-1 font-medium">09:00 AM to 08:00 PM (Daily)</p>
+                  <p className="text-3xs text-sky-800 font-bold uppercase mt-0.5">Closed on festivals only</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                <Phone className="w-5 h-5 text-sky-600 mt-0.5 shrink-0" />
+              <div className="flex items-start gap-3 crystal-glass p-5 rounded-2xl border border-white/50 shadow-sm">
+                <Phone className="w-5 h-5 text-sky-655 mt-0.5 shrink-0" />
                 <div>
-                  <h3 className="font-bold text-slate-900 text-sm">Direct Call</h3>
-                  <a href="tel:8340383252" className="text-sky-600 font-extrabold text-sm hover:underline block mt-1">
+                  <h3 className="font-extrabold text-slate-900 text-sm">Direct Call</h3>
+                  <a href="tel:8340383252" className="text-sky-750 font-black text-sm hover:underline block mt-1">
                     8340383252
                   </a>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                <User className="w-5 h-5 text-sky-600 mt-0.5 shrink-0" />
+              <div className="flex items-start gap-3 crystal-glass p-5 rounded-2xl border border-white/50 shadow-sm">
+                <User className="w-5 h-5 text-sky-655 mt-0.5 shrink-0" />
                 <div>
-                  <h3 className="font-bold text-slate-900 text-sm">Owner Information</h3>
-                  <p className="text-slate-700 text-xs mt-1 font-semibold">Owner: Prabhat Kumar Prabhakar</p>
-                  <p className="text-slate-500 text-2xs mt-0.5 leading-relaxed">
+                  <h3 className="font-extrabold text-slate-900 text-sm">Owner Information</h3>
+                  <p className="text-slate-800 text-xs mt-1 font-bold">Owner: Prabhat Kumar Prabhakar</p>
+                  <p className="text-slate-655 text-2xs mt-0.5 leading-relaxed font-medium">
                     KV Pustakalaya is managed by Prabhat Kumar Prabhakar, dedicated to providing quality stationery and cyber facilities.
                   </p>
                 </div>
@@ -138,7 +139,7 @@ export default function ContactPage() {
             <div className="flex items-center gap-3">
               <a
                 href="tel:8340383252"
-                className="flex-1 text-center py-3 bg-slate-950 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5"
+                className="flex-1 text-center py-3 glass-button text-[#17202A] rounded-xl text-xs font-extrabold transition-all border border-white/60 shadow-sm flex items-center justify-center gap-1.5"
               >
                 <Phone className="w-3.5 h-3.5" />
                 <span>Call Now</span>
@@ -147,9 +148,9 @@ export default function ContactPage() {
                 href="https://wa.me/918340383252"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 text-center py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5"
+                className="flex-1 text-center py-3 bg-gradient-to-r from-[#9DE8FF]/60 to-[#B9D9FF]/60 hover:from-[#9DE8FF]/80 hover:to-[#B9D9FF]/80 text-[#17202A] rounded-xl text-xs font-extrabold transition-all border border-white/50 shadow-sm flex items-center justify-center gap-1.5"
               >
-                <MessageSquare className="w-3.5 h-3.5 fill-current" />
+                <MessageSquare className="w-3.5 h-3.5 fill-current text-sky-800" />
                 <span>WhatsApp</span>
               </a>
             </div>
@@ -159,24 +160,24 @@ export default function ContactPage() {
           <div className="lg:col-span-7 space-y-8">
             
             {/* Inquiry Form */}
-            <div className="bg-white rounded-3xl border border-slate-100 p-8 shadow-sm space-y-6">
+            <div className="crystal-glass p-8 rounded-3xl border border-white/50 shadow-lg space-y-6 backdrop-blur-md">
               <div>
-                <h2 className="text-xl font-bold text-slate-950">Send Online Inquiry</h2>
-                <p className="text-xs text-slate-500 mt-1">Submit your details and we will verify the book availability or service for you.</p>
+                <h2 className="text-xl font-extrabold text-slate-900">Send Online Inquiry</h2>
+                <p className="text-xs text-slate-650 mt-1 font-medium">Submit your details and we will verify the book availability or service for you.</p>
               </div>
 
               {submitted && (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center gap-3 text-emerald-800">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
+                <div className="bg-emerald-100/50 border border-emerald-250/30 rounded-2xl p-4 flex items-center gap-3 text-emerald-805">
+                  <CheckCircle className="w-5 h-5 text-emerald-700 shrink-0" />
                   <div className="text-xs">
                     <p className="font-bold">Inquiry Sent Successfully!</p>
-                    <p className="text-emerald-600 mt-0.5">Thank you. Owner Prabhat Kumar Prabhakar will get back to you shortly.</p>
+                    <p className="text-emerald-705 mt-0.5">Thank you. Owner Prabhat Kumar Prabhakar will get back to you shortly.</p>
                   </div>
                 </div>
               )}
 
               {error && (
-                <div className="bg-rose-50 border border-rose-150 rounded-2xl p-4 text-rose-800 text-xs font-semibold">
+                <div className="bg-rose-100/50 border border-rose-250/30 rounded-2xl p-4 text-rose-805 text-xs font-bold">
                   ⚠️ {error}
                 </div>
               )}
@@ -190,7 +191,7 @@ export default function ContactPage() {
                       placeholder="Enter name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                      className="w-full bg-white/40 border border-slate-200 rounded-xl py-2.5 px-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:bg-white/60 text-[#17202A] placeholder-slate-500 transition-all font-medium"
                       required
                     />
                   </div>
@@ -201,7 +202,7 @@ export default function ContactPage() {
                       placeholder="e.g. 8340383252"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                      className="w-full bg-white/40 border border-slate-200 rounded-xl py-2.5 px-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:bg-white/60 text-[#17202A] placeholder-slate-500 transition-all font-medium"
                       required
                     />
                   </div>
@@ -214,27 +215,27 @@ export default function ContactPage() {
                     rows={4}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                    className="w-full bg-white/40 border border-slate-200 rounded-xl py-2.5 px-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:bg-white/60 text-[#17202A] placeholder-slate-500 transition-all font-medium"
                     required
                   ></textarea>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full brand-gradient hover:brand-gradient-hover text-white py-3 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md flex items-center justify-center gap-1.5"
+                  className="w-full brand-gradient hover:brand-gradient-hover text-[#17202A] py-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all shadow-md flex items-center justify-center gap-1.5 border border-white/45"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="w-4 h-4 text-sky-850" />
                   <span>Send Message</span>
                 </button>
               </form>
             </div>
 
             {/* Google Map Location */}
-            <div className="rounded-3xl overflow-hidden shadow-sm border border-slate-200 aspect-video w-full bg-white relative">
+            <div className="crystal-glass p-1 border border-white/40 shadow-lg rounded-3xl overflow-hidden aspect-video w-full bg-white/20 relative backdrop-blur-sm">
               <iframe
                 title="KV Pustakalaya Map Location"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3581.428784381832!2d86.0825!3d26.1555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ee656413f744e1%3A0x448251f375254e32!2sKv%20Pustakalaya!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
-                className="absolute inset-0 w-full h-full border-0"
+                className="absolute inset-0 w-full h-full border-0 rounded-2xl"
                 allowFullScreen={false}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"

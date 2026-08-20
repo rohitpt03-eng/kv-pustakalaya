@@ -40,17 +40,17 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="flex-grow bg-slate-950 flex flex-col justify-center items-center p-4 relative min-h-screen">
+    <div className="flex-grow bg-transparent flex flex-col justify-center items-center p-4 relative min-h-screen">
       {/* Decorative Glow */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-sky-300/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-80 h-80 bg-indigo-300/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6 z-10 animate-in fade-in zoom-in-95 duration-200">
+      <div className="w-full max-w-md crystal-glass border border-white/50 rounded-3xl p-8 shadow-2xl space-y-6 z-10 animate-in fade-in zoom-in-95 duration-200 backdrop-blur-md">
         
         {/* Back link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Homepage</span>
@@ -58,7 +58,7 @@ export default function AdminLoginPage() {
 
         {/* Branding header */}
         <div className="text-center space-y-3">
-          <div className="relative w-18 h-18 bg-white rounded-full p-0.5 mx-auto shadow-md flex items-center justify-center overflow-hidden">
+          <div className="relative w-18 h-18 bg-white/60 border border-white/80 rounded-full p-0.5 mx-auto shadow-sm flex items-center justify-center overflow-hidden">
             <Image
               src="/logo.png"
               alt="KV Pustakalaya Logo"
@@ -68,14 +68,14 @@ export default function AdminLoginPage() {
             />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">KV Pustakalaya</h1>
-            <p className="text-2xs text-sky-400 font-bold uppercase tracking-wider mt-0.5">Admin Security Login</p>
+            <h1 className="text-xl font-black text-slate-900 tracking-tight">KV Pustakalaya</h1>
+            <p className="text-2xs text-sky-800 font-extrabold uppercase tracking-wider mt-0.5">Admin Security Login</p>
           </div>
         </div>
 
         {/* Error notification */}
         {error && (
-          <div className="bg-rose-500/10 border border-rose-500/35 rounded-xl p-3.5 text-rose-400 text-xs font-medium text-center">
+          <div className="bg-rose-100/50 border border-rose-250/30 rounded-xl p-3.5 text-rose-805 text-xs font-bold text-center">
             {error}
           </div>
         )}
@@ -83,36 +83,36 @@ export default function AdminLoginPage() {
         {/* Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-3xs font-bold text-slate-400 uppercase tracking-widest block">Username</label>
+            <label className="text-3xs font-bold text-slate-500 uppercase tracking-widest block">Username</label>
             <div className="relative">
               <input
                 type="text"
                 placeholder="Enter username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl py-2.5 pl-9 pr-4 text-xs sm:text-sm text-white focus:outline-none transition-colors"
+                className="w-full bg-white/40 border border-slate-200 focus:bg-white/60 focus:ring-2 focus:ring-sky-300 text-[#17202A] placeholder-slate-500 rounded-xl py-2.5 pl-9 pr-4 text-xs sm:text-sm focus:outline-none transition-all font-medium"
                 required
               />
-              <User className="w-4 h-4 text-slate-500 absolute left-3 top-3.5" />
+              <User className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-3xs font-bold text-slate-400 uppercase tracking-widest block">Password</label>
+            <label className="text-3xs font-bold text-slate-500 uppercase tracking-widest block">Password</label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl py-2.5 pl-9 pr-10 text-xs sm:text-sm text-white focus:outline-none transition-colors"
+                className="w-full bg-white/40 border border-slate-200 focus:bg-white/60 focus:ring-2 focus:ring-sky-300 text-[#17202A] placeholder-slate-500 rounded-xl py-2.5 pl-9 pr-10 text-xs sm:text-sm focus:outline-none transition-all font-medium"
                 required
               />
-              <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3.5" />
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-slate-500 hover:text-slate-350 absolute right-3 top-3.5 focus:outline-none"
+                className="text-slate-400 hover:text-slate-655 absolute right-3 top-3.5 focus:outline-none"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -122,13 +122,13 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full brand-gradient hover:brand-gradient-hover text-white py-3 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-lg hover:shadow-sky-500/10 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full brand-gradient hover:brand-gradient-hover text-[#17202A] py-3 rounded-xl font-extrabold text-xs sm:text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer border border-white/45 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
-              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              <span className="w-4 h-4 border-2 border-slate-800 border-t-transparent rounded-full animate-spin"></span>
             ) : (
               <>
-                <Lock className="w-4 h-4" />
+                <Lock className="w-4 h-4 text-sky-850" />
                 <span>Verify Credentials</span>
               </>
             )}
@@ -136,7 +136,7 @@ export default function AdminLoginPage() {
         </form>
 
         <div className="text-center">
-          <p className="text-3xs text-slate-500 leading-relaxed uppercase tracking-wider">
+          <p className="text-3xs text-slate-655 font-bold leading-relaxed uppercase tracking-wider">
             Owner Profile: Prabhat Kumar Prabhakar
           </p>
         </div>

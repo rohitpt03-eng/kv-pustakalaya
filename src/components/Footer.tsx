@@ -14,13 +14,13 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-slate-950 text-slate-300 border-t border-slate-900 mt-auto">
+    <footer className="bg-white/15 backdrop-blur-md text-[#17202A] border-t border-white/25 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Logo & Brand Column */}
           <div className="flex flex-col space-y-4">
             <Link href="/" className="flex items-center space-x-3 group">
-              <div className="relative w-12 h-12 bg-white rounded-full p-0.5 shadow-md flex items-center justify-center overflow-hidden">
+              <div className="relative w-12 h-12 bg-white/40 rounded-full p-0.5 shadow-md flex items-center justify-center overflow-hidden border border-white/50">
                 <Image
                   src="/logo.png"
                   alt="KV Pustakalaya Logo"
@@ -30,15 +30,15 @@ export default function Footer() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight text-white group-hover:text-sky-400 transition-colors">
+                <span className="text-xl font-black tracking-tight text-slate-900 group-hover:text-sky-800 transition-colors">
                   KV Pustakalaya
                 </span>
-                <span className="text-xs font-semibold text-sky-400 -mt-1 font-serif">
+                <span className="text-xs font-bold text-sky-800 -mt-1 font-serif">
                   पढ़ाई का Perfect Partner
                 </span>
               </div>
             </Link>
-            <p className="text-sm text-slate-400 leading-relaxed pt-2">
+            <p className="text-sm text-slate-650 leading-relaxed pt-2">
               Your one-stop destination for quality stationery, textbooks, school supplies, competitive exam materials, cash withdrawal services, and online form filling at Harari Chowk.
             </p>
             <div className="flex space-x-4 pt-2">
@@ -46,7 +46,7 @@ export default function Footer() {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:bg-sky-650 hover:text-white transition-all shadow-sm"
+                className="w-9 h-9 rounded-full bg-white/40 flex items-center justify-center text-slate-700 hover:bg-sky-200 hover:text-sky-900 transition-all border border-white/50 shadow-sm"
                 aria-label="Facebook Page"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -57,7 +57,7 @@ export default function Footer() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:bg-rose-600 hover:text-white transition-all shadow-sm"
+                className="w-9 h-9 rounded-full bg-white/40 flex items-center justify-center text-slate-700 hover:bg-pink-100 hover:text-pink-900 transition-all border border-white/50 shadow-sm"
                 aria-label="Instagram Profile"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -66,92 +66,92 @@ export default function Footer() {
               </a>
             </div>
           </div>
-
+ 
           {/* Quick Links Column */}
           <div>
-            <h3 className="text-white text-base font-bold tracking-wider uppercase mb-5 border-l-4 border-sky-500 pl-3">
+            <h3 className="text-slate-900 text-base font-extrabold tracking-wider uppercase mb-5 border-l-4 border-sky-400 pl-3">
               Explore
             </h3>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-3 text-sm text-slate-700">
               <li>
-                <Link href="/" className="hover:text-white hover:underline transition-colors">
+                <Link href="/" className="hover:text-sky-700 hover:underline transition-colors font-medium">
                   Home Page
                 </Link>
               </li>
               <li>
-                <Link href="/products" className="hover:text-white hover:underline transition-colors">
+                <Link href="/products" className="hover:text-sky-700 hover:underline transition-colors font-medium">
                   Product Catalog
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-white hover:underline transition-colors">
+                <Link href="/about" className="hover:text-sky-700 hover:underline transition-colors font-medium">
                   About Shop
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white hover:underline transition-colors">
+                <Link href="/contact" className="hover:text-sky-700 hover:underline transition-colors font-medium">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="/admin" className="hover:text-white hover:underline transition-colors">
+                <Link href="/admin" className="hover:text-sky-700 hover:underline transition-colors font-medium">
                   Admin Panel Login
                 </Link>
               </li>
             </ul>
           </div>
-
+ 
           {/* Business Details Column */}
           <div>
-            <h3 className="text-white text-base font-bold tracking-wider uppercase mb-5 border-l-4 border-sky-500 pl-3">
+            <h3 className="text-slate-900 text-base font-extrabold tracking-wider uppercase mb-5 border-l-4 border-sky-400 pl-3">
               Store Info
             </h3>
-            <ul className="space-y-3 text-sm text-slate-400">
+            <ul className="space-y-3 text-sm text-slate-650">
               <li className="flex items-start gap-2.5">
-                <Clock className="w-4 h-4 text-sky-400 mt-0.5 shrink-0" />
+                <Clock className="w-4 h-4 text-sky-500 mt-0.5 shrink-0" />
                 <div>
-                  <p className="font-semibold text-slate-300">Working Hours</p>
+                  <p className="font-bold text-slate-800">Working Hours</p>
                   <p>09:00 AM to 08:00 PM</p>
-                  <p className="text-xs text-sky-400">(Open All Days)</p>
+                  <p className="text-xs font-bold text-sky-700">(Open All Days)</p>
                 </div>
               </li>
               <li className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-sky-400 mt-0.5 shrink-0" />
+                <MapPin className="w-4 h-4 text-sky-500 mt-0.5 shrink-0" />
                 <div>
-                  <p className="font-semibold text-slate-300">Location</p>
+                  <p className="font-bold text-slate-800">Location</p>
                   <p>Harari Chowk, Bihar</p>
                 </div>
               </li>
               <li className="flex items-start gap-2.5">
-                <Phone className="w-4 h-4 text-sky-400 mt-0.5 shrink-0" />
+                <Phone className="w-4 h-4 text-sky-500 mt-0.5 shrink-0" />
                 <div>
-                  <p className="font-semibold text-slate-300">Call Support</p>
-                  <a href="tel:8340383252" className="hover:text-white transition-colors">
+                  <p className="font-bold text-slate-800">Call Support</p>
+                  <a href="tel:8340383252" className="hover:text-sky-700 transition-colors font-semibold">
                     8340383252
                   </a>
                 </div>
               </li>
             </ul>
           </div>
-
+ 
           {/* Owner & Contact Column */}
           <div>
-            <h3 className="text-white text-base font-bold tracking-wider uppercase mb-5 border-l-4 border-sky-500 pl-3">
+            <h3 className="text-slate-900 text-base font-extrabold tracking-wider uppercase mb-5 border-l-4 border-sky-400 pl-3">
               Management
             </h3>
             <div className="space-y-4">
-              <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                <p className="text-xs font-semibold uppercase tracking-wider text-sky-400">
+              <div className="crystal-glass p-4 rounded-xl border border-white/50">
+                <p className="text-xs font-bold uppercase tracking-wider text-sky-755">
                   Owner
                 </p>
-                <p className="text-base font-bold text-white mt-1">
+                <p className="text-base font-extrabold text-slate-900 mt-1">
                   Prabhat Kumar Prabhakar
                 </p>
-                <p className="text-xs text-slate-400 leading-relaxed mt-2">
+                <p className="text-xs text-slate-600 leading-relaxed mt-2 font-medium">
                   Dedicated to providing the best stationery, books, cash withdrawals, and form filling facilities at Harari Chowk.
                 </p>
               </div>
-              <div className="text-xs text-slate-500">
+              <div className="text-xs text-slate-500 font-semibold">
                 <p>© {new Date().getFullYear()} KV Pustakalaya.</p>
                 <p className="mt-1">All rights reserved.</p>
               </div>

@@ -1,24 +1,84 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #F4F8FC;
+  --foreground: #17202A;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   scroll-behavior: smooth;
 }
 
-/* Custom design system and animations */
+/* 1. LIQUID GLASS STYLES */
+.crystal-glass {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: 
+    0 8px 32px 0 rgba(185, 217, 255, 0.12),
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1.5px 3px 0 rgba(157, 232, 255, 0.15);
+}
+
+.crystal-glass-interactive {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: 
+    0 8px 32px 0 rgba(185, 217, 255, 0.12),
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1.5px 3px 0 rgba(157, 232, 255, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.crystal-glass-interactive:hover {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 
+    0 12px 40px 0 rgba(185, 217, 255, 0.25),
+    inset 0 1.5px 3px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -2px 4px 0 rgba(157, 232, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.glass-button {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 
+    0 4px 12px rgba(185, 217, 255, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    0 6px 16px rgba(185, 217, 255, 0.25),
+    inset 0 1px 2px rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
+}
+
+/* 2. CUSTOM DESIGN GRADIENTS */
 .brand-gradient {
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #075985 100%);
+  background: linear-gradient(135deg, rgba(221, 244, 255, 0.6) 0%, rgba(185, 217, 255, 0.6) 50%, rgba(221, 214, 255, 0.6) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #17202A;
 }
 
 .brand-gradient-hover {
-  background: linear-gradient(135deg, #0369a1 0%, #075985 50%, #0c4a6e 100%);
+  background: linear-gradient(135deg, rgba(185, 217, 255, 0.7) 0%, rgba(157, 232, 255, 0.7) 50%, rgba(221, 214, 255, 0.7) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  color: #17202A;
 }
 
 .text-brand-gradient {
@@ -27,64 +87,50 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-.glassmorphism {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-}
-
-.glassmorphism-dark {
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Glowing service badge animations */
+/* 3. GLOW EFFECT KEYFRAMES */
 .glow-pulse-blue {
-  box-shadow: 0 0 15px rgba(2, 132, 199, 0.2);
-  border: 1px solid rgba(2, 132, 199, 0.4);
-  animation: pulse-blue-shadow 2.5s infinite ease-in-out;
+  box-shadow: 0 0 15px rgba(185, 217, 255, 0.3);
+  border: 1px solid rgba(185, 217, 255, 0.5);
+  animation: pulse-blue-shadow 3s infinite ease-in-out;
 }
 
-.glow-pulse-green {
-  box-shadow: 0 0 15px rgba(22, 163, 74, 0.2);
-  border: 1px solid rgba(22, 163, 74, 0.4);
-  animation: pulse-green-shadow 2.5s infinite ease-in-out;
+.glow-pulse-cyan {
+  box-shadow: 0 0 15px rgba(157, 232, 255, 0.3);
+  border: 1px solid rgba(157, 232, 255, 0.5);
+  animation: pulse-cyan-shadow 3s infinite ease-in-out;
 }
 
 @keyframes pulse-blue-shadow {
   0%, 100% {
-    box-shadow: 0 0 10px rgba(2, 132, 199, 0.25);
+    box-shadow: 0 0 12px rgba(185, 217, 255, 0.25);
     transform: translateY(0);
   }
   50% {
-    box-shadow: 0 0 25px rgba(2, 132, 199, 0.65);
-    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(185, 217, 255, 0.65), inset 0 0 8px rgba(255,255,255,0.4);
+    transform: translateY(-2px);
   }
 }
 
-@keyframes pulse-green-shadow {
+@keyframes pulse-cyan-shadow {
   0%, 100% {
-    box-shadow: 0 0 10px rgba(22, 163, 74, 0.25);
+    box-shadow: 0 0 12px rgba(157, 232, 255, 0.25);
     transform: translateY(0);
   }
   50% {
-    box-shadow: 0 0 25px rgba(22, 163, 74, 0.65);
-    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(157, 232, 255, 0.65), inset 0 0 8px rgba(255,255,255,0.4);
+    transform: translateY(-2px);
   }
 }
 
-/* Smooth reveal animations */
+/* 4. HOVER SCALE */
 .hover-scale {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .hover-scale:hover {
-  transform: translateY(-5px) scale(1.02);
+  transform: translateY(-4px);
 }
 
-/* Moving announce bar animation */
+/* 5. TICKER ANIMATION */
 @keyframes ticker {
   0% { transform: translateX(100%); }
   100% { transform: translateX(-100%); }
@@ -96,4 +142,47 @@ body {
 
 .animate-ticker:hover {
   animation-play-state: paused;
+}
+
+/* 6. CRYSTAL OR DIAMOND SHINE */
+.crystal-shine {
+  position: relative;
+  overflow: hidden;
+}
+.crystal-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 45%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 55%
+  );
+  transform: rotate(45deg);
+  transition: transform 0.5s ease;
+  pointer-events: none;
+}
+.crystal-shine:hover::after {
+  transform: translate(50%, 50%) rotate(45deg);
+}
+
+/* 7. SLOW FLOATING FOR BLOBS */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+}
+.animate-float-slow {
+  animation: float-slow 15s infinite ease-in-out;
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(15px) rotate(-10deg); }
+}
+.animate-float-medium {
+  animation: float-medium 20s infinite ease-in-out;
 }

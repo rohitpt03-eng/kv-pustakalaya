@@ -52,17 +52,13 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'glassmorphism shadow-md py-2 border-b border-sky-100'
-          : 'bg-white/90 py-4'
-      }`}
+      className={`sticky top-0 z-50 transition-all duration-300 border-b border-white/35 backdrop-blur-md bg-white/25 shadow-sm py-3`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand Name */}
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="relative w-12 h-12 bg-white rounded-full p-0.5 shadow-sm border border-sky-100 flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105">
+            <div className="relative w-12 h-12 bg-white/40 rounded-full p-0.5 shadow-sm border border-white/65 flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105 backdrop-blur-md">
               <Image
                 src="/logo.png"
                 alt="KV Pustakalaya Logo"
@@ -73,15 +69,15 @@ export default function Navbar() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold tracking-tight text-slate-900 group-hover:text-sky-700 transition-colors">
+              <span className="text-xl font-black tracking-tight text-slate-900 group-hover:text-sky-850 transition-colors">
                 KV Pustakalaya
               </span>
-              <span className="text-xs font-medium text-sky-600 -mt-1 font-serif">
+              <span className="text-xs font-bold text-sky-800 -mt-1 font-serif">
                 पढ़ाई का Perfect Partner
               </span>
             </div>
           </Link>
-
+ 
           {/* Desktop Search Bar */}
           <form
             onSubmit={handleSearchSubmit}
@@ -92,38 +88,38 @@ export default function Navbar() {
               placeholder="Search copies, pens, exam books..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-full py-2 pl-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+              className="w-full bg-white/35 border border-white/60 rounded-full py-2.5 pl-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-sky-300 focus:bg-white/60 text-slate-900 placeholder-slate-500 transition-all backdrop-blur-sm"
             />
             <button
               type="submit"
-              className="absolute right-3 top-2.5 text-slate-400 hover:text-sky-600"
+              className="absolute right-3 top-3 text-slate-500 hover:text-sky-700"
             >
               <Search className="w-4 h-4" />
             </button>
           </form>
-
+ 
           {/* Desktop Nav Items */}
           <div className="hidden lg:flex items-center space-x-6">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className={`text-sm font-semibold transition-colors hover:text-sky-600 ${
+                className={`text-sm font-extrabold transition-colors hover:text-sky-700 ${
                   isActive(link.href)
-                    ? 'text-sky-600 border-b-2 border-sky-600 pb-1'
-                    : 'text-slate-600'
+                    ? 'text-sky-700 border-b-2 border-sky-400 pb-1'
+                    : 'text-slate-650'
                 }`}
               >
                 {link.name}
               </Link>
             ))}
           </div>
-
+ 
           {/* Mobile menu button */}
           <div className="flex items-center space-x-3 lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-slate-500 hover:text-sky-600 hover:bg-slate-100 focus:outline-none transition-colors"
+              className="inline-flex items-center justify-center p-2 rounded-md text-slate-600 hover:text-sky-700 hover:bg-white/40 focus:outline-none transition-colors"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
