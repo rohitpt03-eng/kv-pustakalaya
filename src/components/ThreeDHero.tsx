@@ -2,6 +2,10 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function ThreeDHero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -348,6 +352,53 @@ export default function ThreeDHero() {
     }
 
     // --- 5. Interactive Parallax & Scroll Integration ---
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      // 1. Position book covers at open state
+      leftCoverPivot.rotation.y = -Math.PI * 0.88;
+      rightCoverPivot.rotation.y = Math.PI * 0.88;
+
+      // 2. Fan page rotations
+      pagesPivotList.forEach((pivot, index) => {
+        const pageRatio = index / (pageCount - 1);
+        pivot.rotation.y = -Math.PI * 0.8 * pageRatio;
+      });
+
+      // 3. Fully scale up and position stationery items around book
+      stationeryList.forEach((item) => {
+        item.mesh.scale.setScalar(0.95);
+        item.mesh.position.copy(item.basePos);
+        item.mesh.position.y += 2.2;
+      });
+
+      // 4. Position camera in standard static perspective open composition
+      camera.position.set(-2.5, -0.5, 12);
+      camera.lookAt(new THREE.Vector3(1.2, -0.4, 0));
+
+      renderer.render(scene, camera);
+      setIsLoaded(true);
+
+      const handleResize = () => {
+        if (!containerRef.current) return;
+        const w = containerRef.current.clientWidth;
+        const h = containerRef.current.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+        renderer.render(scene, camera);
+      };
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        if (containerRef.current && renderer.domElement) {
+          containerRef.current.removeChild(renderer.domElement);
+        }
+        renderer.dispose();
+      };
+    }
+
     let scrollY = 0;
     let targetScrollY = 0;
     let mouseX = 0;
@@ -367,6 +418,58 @@ export default function ThreeDHero() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
+    // GSAP ScrollTrigger state object
+    const animState = {
+      openProgress: 0,
+      pageTurn: 0,
+      stationeryRise: 0,
+      cameraPath: 0,
+    };
+
+    const scrollMax = 900; 
+
+    // Create GSAP ScrollTrigger
+    const trigger = ScrollTrigger.create({
+      trigger: document.body,
+      start: 'top top',
+      end: () => `+=${scrollMax}`,
+      scrub: 1.0, // Smooth scrubbing LERP
+      onUpdate: (self) => {
+        const progress = self.progress;
+
+        // 0% to 20%: CLOSED BOOK (approaching)
+        // 20% to 40%: BOOK OPENS
+        if (progress <= 0.2) {
+          animState.openProgress = 0;
+        } else if (progress <= 0.45) {
+          animState.openProgress = (progress - 0.2) / 0.25; 
+        } else {
+          animState.openProgress = 1;
+        }
+
+        // 40% to 65%: PAGES FLIP
+        if (progress <= 0.4) {
+          animState.pageTurn = 0;
+        } else if (progress <= 0.65) {
+          animState.pageTurn = (progress - 0.4) / 0.25; 
+        } else {
+          animState.pageTurn = 1;
+        }
+
+        // 60% to 85%: STATIONERY EMERGES
+        if (progress <= 0.55) {
+          animState.stationeryRise = 0;
+        } else if (progress <= 0.85) {
+          animState.stationeryRise = (progress - 0.55) / 0.3; 
+        } else {
+          animState.stationeryRise = 1;
+        }
+
+        // Camera path across full scroll (0 to 1)
+        animState.cameraPath = progress;
+      }
+    });
+
     // Mark loaded
     setIsLoaded(true);
 
@@ -384,13 +487,12 @@ export default function ThreeDHero() {
       mouseX += (targetMouseX - mouseX) * 0.035;
       mouseY += (targetMouseY - mouseY) * 0.035;
 
-      // Normalize scroll bounds
-      const scrollMax = 900; 
-      const scrollRatio = Math.min(scrollY / scrollMax, 1.0);
+      const scrollRatio = animState.cameraPath;
 
       // Book Animation based on scroll + entry reveal
-      const revealProgress = Math.min(elapsed * 0.7, 1.0); 
-      const openRatio = Math.max(scrollRatio, revealProgress); 
+      const revealProgress = Math.min(elapsed * 0.65, 1.0); 
+      // Open cover progress
+      const openRatio = Math.max(animState.openProgress, revealProgress * 0.05);
 
       // Left cover rotates from 0 to -160 degrees
       leftCoverPivot.rotation.y = -openRatio * (Math.PI * 0.88);
@@ -400,11 +502,18 @@ export default function ThreeDHero() {
       // Page Flipping Logic: spread pages like a fan
       pagesPivotList.forEach((pivot, index) => {
         const pageRatio = index / (pageCount - 1);
-        const targetRotation = -openRatio * (Math.PI * 0.88) * pageRatio;
+        
+        // Seq flip thresholds
+        const pageStart = pageRatio * 0.5;
+        const pageFlipProgress = Math.max(0, Math.min((animState.pageTurn - pageStart) / 0.5, 1.0));
+        
+        // Fan out a bit initially, then fully flip to the left
+        const baseFan = -0.08 * pageRatio * openRatio;
+        const flipRotation = -pageFlipProgress * (Math.PI * 0.8);
         
         // Add tiny flutter wave
-        const flutter = Math.sin(elapsed * 4 + index) * 0.015 * (1 - openRatio);
-        pivot.rotation.y = targetRotation + flutter;
+        const flutter = Math.sin(elapsed * 4 + index) * 0.012 * (1 - pageFlipProgress) * openRatio;
+        pivot.rotation.y = baseFan + flipRotation + flutter;
       });
 
       // Page Bending / Organic Curling Deformation Loop
@@ -412,11 +521,11 @@ export default function ThreeDHero() {
         const angle = pagesPivotList[index].rotation.y;
         // Bending factor is maximal when the page is mid-turn
         const flipProgress = Math.abs(angle) / (Math.PI * 0.88);
-        const bendFactor = Math.sin(flipProgress * Math.PI) * 0.28 * (1 - openRatio * 0.3);
+        const bendFactor = Math.sin(flipProgress * Math.PI) * 0.32 * (1 - animState.cameraPath * 0.3);
 
         const pos = mesh.geometry.attributes.position;
         for (let j = 0; j < pos.count; j++) {
-          const x = pos.getX(j); // ranges from 0 to 2.4 because of translate
+          const x = pos.getX(j); 
           const normX = x / 2.4; 
           const curve = Math.sin(normX * Math.PI) * bendFactor;
           pos.setZ(j, curve);
@@ -432,19 +541,43 @@ export default function ThreeDHero() {
 
       // Stationery floats upward out of book as it opens
       stationeryList.forEach((item, index) => {
-        const riseOffset = openRatio * 1.5;
+        const itemStagger = (index / stationeryList.length) * 0.4;
+        const emergenceRatio = Math.max(0, Math.min((animState.stationeryRise - itemStagger) / 0.6, 1.0));
+        
+        // Rise and scale
+        const riseOffset = emergenceRatio * 2.2;
         const floatY = Math.sin(elapsed * item.speed + item.phase) * item.rangeY;
         
         item.mesh.position.y = item.basePos.y + floatY + riseOffset;
         item.mesh.position.x = item.basePos.x + Math.sin(elapsed * 0.3 + index) * 0.15;
         
+        // Rotate slowly
         item.mesh.rotation.x += 0.005;
         item.mesh.rotation.y += 0.008;
+
+        // Hide items initially, scale up as they emerge
+        item.mesh.scale.setScalar(emergenceRatio * 0.95);
+
+        // Transit some items close to lens on scroll transition (above 80% scroll)
+        if (scrollRatio > 0.8) {
+          const transitProgress = (scrollRatio - 0.8) / 0.2; 
+          if (index === 0) {
+            // First item (Pen) zooms close past front right of camera
+            item.mesh.position.z += (11.0 - item.mesh.position.z) * 0.15 * transitProgress;
+            item.mesh.position.x += (-2.0 - item.mesh.position.x) * 0.15 * transitProgress;
+            item.mesh.position.y += (1.0 - item.mesh.position.y) * 0.15 * transitProgress;
+          } else if (index === 1) {
+            // Second item (Pencil) zooms close past front left of camera
+            item.mesh.position.z += (10.0 - item.mesh.position.z) * 0.15 * transitProgress;
+            item.mesh.position.x += (-5.0 - item.mesh.position.x) * 0.15 * transitProgress;
+            item.mesh.position.y += (-1.5 - item.mesh.position.y) * 0.15 * transitProgress;
+          }
+        }
       });
 
       // Flying sheets of paper orbiting the book
       paperList.forEach((paper, index) => {
-        const orbitAngle = paper.baseAngle + (elapsed * paper.speed * 0.18) + (openRatio * 1.2);
+        const orbitAngle = paper.baseAngle + (elapsed * paper.speed * 0.18) + (animState.cameraPath * 1.2);
         
         paper.mesh.position.x = bookGroup.position.x + Math.cos(orbitAngle) * paper.radius;
         paper.mesh.position.z = bookGroup.position.z + Math.sin(orbitAngle) * paper.radius;
@@ -480,15 +613,15 @@ export default function ThreeDHero() {
       rootGroup.position.y += (-mouseY * 1.8 - rootGroup.position.y) * 0.06;
 
       // Scroll camera zoom & pan LERP paths
-      const targetCamZ = 16 - (scrollRatio * 5.0);
-      const targetCamX = -scrollRatio * 4.0;
-      const targetCamY = -scrollRatio * 1.2;
+      const targetCamZ = 16 - (scrollRatio * 6.0);
+      const targetCamX = -scrollRatio * 4.5;
+      const targetCamY = -scrollRatio * 1.8;
 
       camera.position.z += (targetCamZ - camera.position.z) * 0.055;
       camera.position.x += (targetCamX - camera.position.x) * 0.055;
       camera.position.y += (targetCamY - camera.position.y) * 0.055;
 
-      const targetLookAt = new THREE.Vector3(scrollRatio * 1.6, -scrollRatio * 0.6, 0);
+      const targetLookAt = new THREE.Vector3(scrollRatio * 2.0, -scrollRatio * 0.8, 0);
       currentLookAt.lerp(targetLookAt, 0.055);
       camera.lookAt(currentLookAt);
 
@@ -516,6 +649,7 @@ export default function ThreeDHero() {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
+      trigger.kill();
       if (containerRef.current && renderer.domElement) {
         containerRef.current.removeChild(renderer.domElement);
       }

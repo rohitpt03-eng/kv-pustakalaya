@@ -5,6 +5,7 @@ import AnnouncementBar from "@/components/AnnouncementBar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,7 +58,9 @@ export default function RootLayout({
         <AnnouncementBar />
         <Navbar />
         <main className="flex-grow flex flex-col w-full relative">
-          {children}
+          <SmoothScroll>
+            {children}
+          </SmoothScroll>
         </main>
         <Footer />
         <WhatsAppButton />
