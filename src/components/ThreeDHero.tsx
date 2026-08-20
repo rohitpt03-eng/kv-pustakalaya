@@ -148,6 +148,7 @@ export default function ThreeDHero() {
 
     // Pages Pivot List
     const pagesPivotList: THREE.Group[] = [];
+    const pagesMeshList: THREE.Mesh[] = [];
     const pageCount = 9;
     for (let i = 0; i < pageCount; i++) {
       const pagePivot = new THREE.Group();
@@ -155,14 +156,17 @@ export default function ThreeDHero() {
       bookGroup.add(pagePivot);
       pagesPivotList.push(pagePivot);
 
-      // Create slightly curved/folded page geometry
-      const pageGeo = new THREE.BoxGeometry(2.4, 3.4, 0.01);
+      // Create high-segment count plane for dynamic folding/bending
+      const pageGeo = new THREE.PlaneGeometry(2.4, 3.4, 16, 2);
+      // Translate vertices to anchor at left edge
+      pageGeo.translate(1.2, 0, 0);
+
       const pageMesh = new THREE.Mesh(pageGeo, pageMaterial);
-      // Offset so rotation is at the page spine boundary
-      pageMesh.position.set(1.2, 0, 0.01 * i);
+      pageMesh.position.set(0, 0, 0.01 * i);
       pageMesh.castShadow = true;
       pageMesh.receiveShadow = true;
       pagePivot.add(pageMesh);
+      pagesMeshList.push(pageMesh);
     }
 
     // B. Floating Stationery Ecosystem
@@ -368,23 +372,24 @@ export default function ThreeDHero() {
 
     // --- 6. Frame Animation Loop ---
     const clock = new THREE.Clock();
+    const currentLookAt = new THREE.Vector3(0, 0, 0);
 
     const animate = () => {
       requestAnimationFrame(animate);
 
       const elapsed = clock.getElapsedTime();
 
-      // Smooth scroll & mouse damping
-      scrollY += (targetScrollY - scrollY) * 0.08;
-      mouseX += (targetMouseX - mouseX) * 0.05;
-      mouseY += (targetMouseY - mouseY) * 0.05;
+      // Cinematic slow-damped scroll & mouse coordinates LERP
+      scrollY += (targetScrollY - scrollY) * 0.045;
+      mouseX += (targetMouseX - mouseX) * 0.035;
+      mouseY += (targetMouseY - mouseY) * 0.035;
 
       // Normalize scroll bounds
-      const scrollMax = 900; // Trigger full open in first 900px scroll
+      const scrollMax = 900; 
       const scrollRatio = Math.min(scrollY / scrollMax, 1.0);
 
       // Book Animation based on scroll + entry reveal
-      const revealProgress = Math.min(elapsed * 0.7, 1.0); // 0 to 1 open in first 1.5s
+      const revealProgress = Math.min(elapsed * 0.7, 1.0); 
       const openRatio = Math.max(scrollRatio, revealProgress); 
 
       // Left cover rotates from 0 to -160 degrees
@@ -394,13 +399,30 @@ export default function ThreeDHero() {
 
       // Page Flipping Logic: spread pages like a fan
       pagesPivotList.forEach((pivot, index) => {
-        // Distribute rotation between left (-160 deg) and right (0 deg) cover states
         const pageRatio = index / (pageCount - 1);
         const targetRotation = -openRatio * (Math.PI * 0.88) * pageRatio;
         
         // Add tiny flutter wave
         const flutter = Math.sin(elapsed * 4 + index) * 0.015 * (1 - openRatio);
         pivot.rotation.y = targetRotation + flutter;
+      });
+
+      // Page Bending / Organic Curling Deformation Loop
+      pagesMeshList.forEach((mesh, index) => {
+        const angle = pagesPivotList[index].rotation.y;
+        // Bending factor is maximal when the page is mid-turn
+        const flipProgress = Math.abs(angle) / (Math.PI * 0.88);
+        const bendFactor = Math.sin(flipProgress * Math.PI) * 0.28 * (1 - openRatio * 0.3);
+
+        const pos = mesh.geometry.attributes.position;
+        for (let j = 0; j < pos.count; j++) {
+          const x = pos.getX(j); // ranges from 0 to 2.4 because of translate
+          const normX = x / 2.4; 
+          const curve = Math.sin(normX * Math.PI) * bendFactor;
+          pos.setZ(j, curve);
+        }
+        mesh.geometry.attributes.position.needsUpdate = true;
+        mesh.geometry.computeVertexNormals();
       });
 
       // Slowly rotate the book group
@@ -410,16 +432,12 @@ export default function ThreeDHero() {
 
       // Stationery floats upward out of book as it opens
       stationeryList.forEach((item, index) => {
-        // Base rise effect linked to book openRatio
         const riseOffset = openRatio * 1.5;
-        
-        // Floating wave animation
         const floatY = Math.sin(elapsed * item.speed + item.phase) * item.rangeY;
         
         item.mesh.position.y = item.basePos.y + floatY + riseOffset;
         item.mesh.position.x = item.basePos.x + Math.sin(elapsed * 0.3 + index) * 0.15;
         
-        // Slow rotation
         item.mesh.rotation.x += 0.005;
         item.mesh.rotation.y += 0.008;
       });
@@ -428,12 +446,10 @@ export default function ThreeDHero() {
       paperList.forEach((paper, index) => {
         const orbitAngle = paper.baseAngle + (elapsed * paper.speed * 0.18) + (openRatio * 1.2);
         
-        // Orbit position math
         paper.mesh.position.x = bookGroup.position.x + Math.cos(orbitAngle) * paper.radius;
         paper.mesh.position.z = bookGroup.position.z + Math.sin(orbitAngle) * paper.radius;
         paper.mesh.position.y = paper.heightOffset + Math.sin(elapsed * 0.8 + index) * 0.3;
 
-        // Orient paper mesh along orbit tangent
         paper.mesh.rotation.y = -orbitAngle + Math.PI / 2 + Math.sin(elapsed * 1.5 + index) * 0.15;
         paper.mesh.rotation.x = Math.sin(elapsed * 0.7 + index) * 0.2;
       });
@@ -442,7 +458,6 @@ export default function ThreeDHero() {
       glassRibbons.forEach((ribbon, index) => {
         ribbon.rotation.x = elapsed * 0.08 * (index === 0 ? 1 : -1);
         ribbon.rotation.y = elapsed * 0.05;
-        // Parallax offset
         ribbon.position.x += (targetMouseX * 0.01 - ribbon.position.x) * 0.01;
       });
 
@@ -457,19 +472,25 @@ export default function ThreeDHero() {
         crystal.mesh.rotation.x += crystal.rotationSpeed.x;
         crystal.mesh.rotation.y += crystal.rotationSpeed.y;
         crystal.mesh.rotation.z += crystal.rotationSpeed.z;
-        // Hover float
         crystal.mesh.position.y = crystal.basePos.y + Math.sin(elapsed * 0.6 + crystal.phase) * 0.12;
       });
 
       // Mouse Parallax on root group
-      rootGroup.position.x = mouseX * 2.2;
-      rootGroup.position.y = -mouseY * 1.8;
+      rootGroup.position.x += (mouseX * 2.2 - rootGroup.position.x) * 0.06;
+      rootGroup.position.y += (-mouseY * 1.8 - rootGroup.position.y) * 0.06;
 
-      // Scroll camera zoom / path
-      // Move camera closer and pan left as the user scrolls
-      camera.position.z = 16 - (scrollRatio * 4.5);
-      camera.position.x = -scrollRatio * 3.5;
-      camera.lookAt(new THREE.Vector3(scrollRatio * 1.5, -scrollRatio * 0.5, 0));
+      // Scroll camera zoom & pan LERP paths
+      const targetCamZ = 16 - (scrollRatio * 5.0);
+      const targetCamX = -scrollRatio * 4.0;
+      const targetCamY = -scrollRatio * 1.2;
+
+      camera.position.z += (targetCamZ - camera.position.z) * 0.055;
+      camera.position.x += (targetCamX - camera.position.x) * 0.055;
+      camera.position.y += (targetCamY - camera.position.y) * 0.055;
+
+      const targetLookAt = new THREE.Vector3(scrollRatio * 1.6, -scrollRatio * 0.6, 0);
+      currentLookAt.lerp(targetLookAt, 0.055);
+      camera.lookAt(currentLookAt);
 
       renderer.render(scene, camera);
     };
