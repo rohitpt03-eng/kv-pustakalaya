@@ -13,14 +13,10 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
   const [isOverlayVisible, setIsOverlayVisible] = useState(true);
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
-
-  useEffect(() => {
     if (!containerRef.current) return;
+
+    // Lock body scrolling
+    document.body.style.overflow = 'hidden';
 
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -52,29 +48,68 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     dirLight.shadow.mapSize.height = 1024;
     scene.add(dirLight);
 
-    const cyanLight = new THREE.PointLight(0x9de8ff, 3.0, 15);
+    const cyanLight = new THREE.PointLight(0x9de8ff, 3.5, 15);
     cyanLight.position.set(-4, 0, 3);
     scene.add(cyanLight);
 
-    // --- 3. Sharded Paper & Pen Meshes ---
-    // Frosted Paper Glass Material
+    const lavenderLight = new THREE.PointLight(0xddd6ff, 2.5, 15);
+    lavenderLight.position.set(4, -1, 3);
+    scene.add(lavenderLight);
+
+    // --- 3. Dynamic Copy Paper Canvas Texture ---
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      // Frosted white background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 512, 512);
+
+      // Red double margin line
+      ctx.strokeStyle = '#ff6b6b';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(90, 0);
+      ctx.lineTo(90, 512);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(96, 0);
+      ctx.lineTo(96, 512);
+      ctx.stroke();
+
+      // Blue copy lines
+      ctx.strokeStyle = '#cce0ff';
+      ctx.lineWidth = 2.0;
+      for (let y = 60; y < 512; y += 38) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(512, y);
+        ctx.stroke();
+      }
+    }
+    const paperTexture = new THREE.CanvasTexture(canvas);
+
+    // Paper Material with clearcoat & transparency
     const paperMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
+      map: paperTexture,
       transparent: true,
-      opacity: 0.5,
-      transmission: 0.8,
-      roughness: 0.15,
+      opacity: 0.75,
+      transmission: 0.5,
+      roughness: 0.25,
       metalness: 0.05,
       ior: 1.45,
-      thickness: 1.0,
+      thickness: 0.5,
       side: THREE.DoubleSide,
-      clearcoat: 1.0
+      clearcoat: 0.8,
+      clearcoatRoughness: 0.1
     });
 
     const penMetallicMat = new THREE.MeshStandardMaterial({
       color: 0x17202a,
-      metalness: 0.85,
-      roughness: 0.15
+      metalness: 0.9,
+      roughness: 0.12
     });
 
     const penAccentMat = new THREE.MeshStandardMaterial({
@@ -85,99 +120,161 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
 
     const tipMaterial = new THREE.MeshStandardMaterial({
       color: 0xddf4ff,
-      metalness: 0.9,
-      roughness: 0.1
+      metalness: 0.95,
+      roughness: 0.05
     });
 
     const rootGroup = new THREE.Group();
     scene.add(rootGroup);
 
-    // A. Build Sharded Paper
+    // --- 4. Shattered Paper Procedural Grid Creation ---
     const paperGroup = new THREE.Group();
     rootGroup.add(paperGroup);
 
     const W = 3.6;
     const H = 5.0;
 
-    // Define vertices around the rectangle perimeter
-    const boundaryPoints = [
-      new THREE.Vector3(-W/2, H/2, 0),    // 0: Top-Left
-      new THREE.Vector3(0, H/2, 0),       // 1: Top-Center
-      new THREE.Vector3(W/2, H/2, 0),     // 2: Top-Right
-      new THREE.Vector3(W/2, 0, 0),       // 3: Right-Center
-      new THREE.Vector3(W/2, -H/2, 0),    // 4: Bottom-Right
-      new THREE.Vector3(0, -H/2, 0),      // 5: Bottom-Center
-      new THREE.Vector3(-W/2, -H/2, 0),   // 6: Bottom-Left
-      new THREE.Vector3(-W/2, 0, 0),      // 7: Left-Center
-    ];
+    // Helper to get polar grid coordinates clamped to bounds
+    const getPaperVertex = (r: number, theta: number) => {
+      if (r === 0) return new THREE.Vector3(0, 0, 0);
+      
+      let radius = 0;
+      if (r === 1) radius = 0.3 + Math.random() * 0.15;
+      else if (r === 2) radius = 0.95 + Math.random() * 0.25;
+      else {
+        // Clamp concentric ring 3 to rectangular boundary
+        const cosVal = Math.cos(theta);
+        const sinVal = Math.sin(theta);
+        const limitX = W / 2;
+        const limitY = H / 2;
+        
+        const rX = Math.abs(limitX / cosVal);
+        const rY = Math.abs(limitY / sinVal);
+        radius = Math.min(rX, rY);
+      }
+      
+      return new THREE.Vector3(radius * Math.cos(theta), radius * Math.sin(theta), 0);
+    };
 
-    // Create 8 sharded triangles meeting at a central point (0,0,0)
-    const shards: {
+    interface ShardInfo {
       mesh: THREE.Mesh;
-      baseCenter: THREE.Vector3;
-      dir: THREE.Vector3;
-      angle: number;
-    }[] = [];
-
-    for (let i = 0; i < 8; i++) {
-      const p1 = boundaryPoints[i];
-      const p2 = boundaryPoints[(i + 1) % 8];
-      
-      const geom = new THREE.BufferGeometry();
-      
-      // Initial positions
-      const vertices = new Float32Array([
-        0, 0, 0,        // Center vertex
-        p1.x, p1.y, p1.z,
-        p2.x, p2.y, p2.z
-      ]);
-
-      geom.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-      geom.computeVertexNormals();
-
-      const mesh = new THREE.Mesh(geom, paperMaterial);
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      paperGroup.add(mesh);
-
-      // Radial direction vector pointing outward from center
-      const avgX = (p1.x + p2.x) / 2;
-      const avgY = (p1.y + p2.y) / 2;
-      const dir = new THREE.Vector3(avgX, avgY, 0).normalize();
-      const angle = Math.atan2(avgY, avgX);
-
-      shards.push({
-        mesh,
-        baseCenter: new THREE.Vector3(0, 0, 0),
-        dir,
-        angle
-      });
+      type: 'fly' | 'hinge';
+      velocity: THREE.Vector3;
+      rotSpeed: THREE.Vector3;
+      centerOffset: THREE.Vector3;
+      originAngle: number;
     }
 
-    // B. Build the Falling Pen
+    const shardList: ShardInfo[] = [];
+    const sectors = 12; // Radial divisions
+
+    // Build the concentric mesh layers
+    for (let s = 0; s < sectors; s++) {
+      const theta1 = (s / sectors) * Math.PI * 2;
+      const theta2 = ((s + 1) / sectors) * Math.PI * 2;
+
+      // Layer 0: Triangles meeting at Center
+      const v0_0 = getPaperVertex(0, theta1);
+      const v0_1 = getPaperVertex(1, theta1);
+      const v0_2 = getPaperVertex(1, theta2);
+
+      // Layer 1: inner rings (quads split into 2 triangles)
+      const v1_0 = getPaperVertex(1, theta1);
+      const v1_1 = getPaperVertex(2, theta1);
+      const v1_2 = getPaperVertex(2, theta2);
+      const v1_3 = getPaperVertex(1, theta2);
+
+      // Layer 2: outer boundaries (quads split into 2 triangles)
+      const v2_0 = getPaperVertex(2, theta1);
+      const v2_1 = getPaperVertex(3, theta1);
+      const v2_2 = getPaperVertex(3, theta2);
+      const v2_3 = getPaperVertex(2, theta2);
+
+      const addTriangle = (vA: THREE.Vector3, vB: THREE.Vector3, vC: THREE.Vector3, type: 'fly' | 'hinge', layer: number) => {
+        const geom = new THREE.BufferGeometry();
+        const vertices = new Float32Array([
+          vA.x, vA.y, vA.z,
+          vB.x, vB.y, vB.z,
+          vC.x, vC.y, vC.z
+        ]);
+        
+        // Map UV coordinates relative to absolute layout bounding box
+        const uvs = new Float32Array([
+          (vA.x + W/2) / W, (vA.y + H/2) / H,
+          (vB.x + W/2) / W, (vB.y + H/2) / H,
+          (vC.x + W/2) / W, (vC.y + H/2) / H
+        ]);
+
+        geom.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+        geom.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+        geom.computeVertexNormals();
+
+        const mesh = new THREE.Mesh(geom, paperMaterial);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        paperGroup.add(mesh);
+
+        const centroid = new THREE.Vector3()
+          .add(vA).add(vB).add(vC)
+          .multiplyScalar(1 / 3);
+
+        const originAngle = Math.atan2(centroid.y, centroid.x);
+        const dir = new THREE.Vector3(centroid.x, centroid.y, 0).normalize();
+
+        // Velocity profiles based on layer distance
+        const velocity = new THREE.Vector3();
+        const rotSpeed = new THREE.Vector3(
+          (Math.random() - 0.5) * 5,
+          (Math.random() - 0.5) * 5,
+          (Math.random() - 0.5) * 5
+        );
+
+        if (type === 'fly') {
+          const speed = layer === 0 ? 5.5 : 2.5;
+          velocity.set(dir.x * speed * 0.8, dir.y * speed * 0.8, -4.0 - Math.random() * 3.0);
+        }
+
+        shardList.push({
+          mesh,
+          type,
+          velocity,
+          rotSpeed,
+          centerOffset: centroid,
+          originAngle
+        });
+      };
+
+      // Create Shards
+      addTriangle(v0_0, v0_1, v0_2, 'fly', 0);
+      
+      addTriangle(v1_0, v1_1, v1_2, 'fly', 1);
+      addTriangle(v1_0, v1_2, v1_3, 'fly', 1);
+
+      addTriangle(v2_0, v2_1, v2_2, 'hinge', 2);
+      addTriangle(v2_0, v2_2, v2_3, 'hinge', 2);
+    }
+
+    // --- 5. Falling Pen Setup ---
     const penGroup = new THREE.Group();
-    penGroup.position.set(0, 12, 0); // Start high
-    penGroup.rotation.z = -0.15;    // Slight slant for dynamic entry
+    penGroup.position.set(0.1, 12, 0); // descent starting point
+    penGroup.rotation.z = -0.15;
     scene.add(penGroup);
 
-    // Pen Body Cylinder
-    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 2.2, 16), penMetallicMat);
-    body.castShadow = true;
-    penGroup.add(body);
+    const penBody = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 2.2, 16), penMetallicMat);
+    penBody.castShadow = true;
+    penGroup.add(penBody);
 
-    // Pen Clip
-    const clip = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.6, 0.15), penAccentMat);
-    clip.position.set(0, 0.6, 0.17);
-    penGroup.add(clip);
+    const penClip = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.6, 0.15), penAccentMat);
+    penClip.position.set(0, 0.6, 0.17);
+    penGroup.add(penClip);
 
-    // Tip Cone
-    const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.001, 0.12, 0.45, 16), tipMaterial);
-    tip.position.y = -1.325;
-    tip.castShadow = true;
-    penGroup.add(tip);
+    const penTip = new THREE.Mesh(new THREE.CylinderGeometry(0.001, 0.12, 0.45, 16), tipMaterial);
+    penTip.position.y = -1.325;
+    penTip.castShadow = true;
+    penGroup.add(penTip);
 
-    // C. Burst Particles (sparks/small paper shards on impact)
-    const particleCount = 20;
+    // Impact Sparks/Particles
+    const particleCount = 25;
     const particleGeometry = new THREE.OctahedronGeometry(0.06, 0);
     const particleMaterial = new THREE.MeshBasicMaterial({ color: 0x9de8ff });
     const particles: { mesh: THREE.Mesh; vel: THREE.Vector3; rotSpeed: THREE.Vector3; active: boolean }[] = [];
@@ -189,22 +286,22 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       particles.push({
         mesh: pMesh,
         vel: new THREE.Vector3(),
-        rotSpeed: new THREE.Vector3(Math.random() * 0.2, Math.random() * 0.2, Math.random() * 0.2),
+        rotSpeed: new THREE.Vector3(Math.random() * 0.4, Math.random() * 0.4, Math.random() * 0.4),
         active: false
       });
     }
 
-    // --- 4. Animation Timeline ---
+    // --- 6. GSAP Timeline ---
     const animState = {
-      impactProgress: 0, // 0 to 1 after impact
+      impactProgress: 0,
       cameraShake: 0
     };
 
     let isImpacted = false;
+    let impactTime = 0;
 
     const timeline = gsap.timeline({
       onComplete: () => {
-        // Smoothly fade out overlay after completion
         gsap.to(containerRef.current, {
           opacity: 0,
           duration: 0.35,
@@ -216,47 +313,47 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       }
     });
 
-    // 1st phase: Fast Pen descent (takes ~0.35s)
+    // Descent phase (0.35s)
     timeline.to(penGroup.position, {
-      y: -0.15, // Pierces through the paper slightly
-      duration: 0.38,
+      y: -0.2, // Pierces through the paper
+      duration: 0.35,
       ease: 'power3.in',
       onComplete: () => {
         isImpacted = true;
+        impactTime = clock.getElapsedTime();
         animState.cameraShake = 1.0;
         
-        // Trigger burst particles
-        particles.forEach((p, idx) => {
-          p.mesh.position.set(0, 0, 0);
+        // Spawn sparks
+        particles.forEach((p) => {
+          p.mesh.position.set(0.1, -0.2, 0);
           p.mesh.visible = true;
           p.active = true;
           
-          // Random semi-hemispherical direction
           const theta = Math.random() * Math.PI * 2;
-          const phi = Math.random() * Math.PI * 0.4;
-          const speed = 4.5 + Math.random() * 5.0;
+          const phi = Math.random() * Math.PI * 0.45;
+          const speed = 5.0 + Math.random() * 6.0;
           p.vel.set(
             Math.cos(theta) * Math.sin(phi) * speed,
             Math.sin(theta) * Math.sin(phi) * speed,
-            Math.cos(phi) * speed + 2.0
+            Math.cos(phi) * speed + 3.0
           );
         });
       }
     });
 
-    // 2nd phase: Impact reaction deceleration, paper bending, and settling (takes ~0.8s)
+    // Deceleration & Shatter Progress
     timeline.to(animState, {
       impactProgress: 1.0,
-      duration: 0.35,
-      ease: 'back.out(2.5)'
+      duration: 0.38,
+      ease: 'back.out(1.8)'
     });
 
-    // Slow slide-through settling of the pen
+    // Pen settles down slowly
     timeline.to(penGroup.position, {
-      y: -0.85,
+      y: -0.9,
       duration: 0.6,
       ease: 'power2.out'
-    }, '-=0.35');
+    }, '-=0.38');
 
     // Camera shake dampening
     timeline.to(animState, {
@@ -265,10 +362,10 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       ease: 'power1.out'
     }, '-=0.5');
 
-    // Hold the final shattered state for 1.8 seconds (giving 3 seconds total splash screen time)
+    // Hold the shattered page layout for remaining delay (3 seconds total splash screen)
     timeline.to({}, { duration: 1.8 });
 
-    // --- 5. Frame Render loop ---
+    // --- 7. Frame Update loop ---
     let animId: number;
     const clock = new THREE.Clock();
 
@@ -277,48 +374,52 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       
       const elapsed = clock.getElapsedTime();
 
-      // Apply procedural shattering to paper shards post-impact
       if (isImpacted) {
         const progress = animState.impactProgress;
         
-        shards.forEach((shard) => {
-          const posAttr = shard.mesh.geometry.attributes.position;
-          
-          // Outward push displacement
-          const pushDistance = progress * 0.35;
-          const downPush = progress * -0.9; // Downward tear z-axis
-          
-          // Update the center vertex of each triangular shard
-          // Index 0 in our buffer attribute represents the center vertex (0,0,0)
-          posAttr.setX(0, shard.dir.x * pushDistance);
-          posAttr.setY(0, shard.dir.y * pushDistance);
-          posAttr.setZ(0, downPush);
-          
-          // Slightly curl the shards backwards
-          shard.mesh.rotation.z = shard.angle + Math.sin(progress * Math.PI * 0.5) * 0.12;
+        // Physics Wobble / Rebound on Pen Tip
+        const timeSinceImpact = elapsed - impactTime;
+        if (timeSinceImpact > 0 && timeSinceImpact < 0.6) {
+          const wobble = Math.sin(timeSinceImpact * 80) * 0.12 * Math.exp(-timeSinceImpact * 7);
+          penGroup.rotation.z = -0.15 + wobble;
+          penGroup.rotation.x = wobble * 0.5;
+        }
 
-          posAttr.needsUpdate = true;
-          shard.mesh.geometry.computeVertexNormals();
+        // Shards animation
+        shardList.forEach((shard) => {
+          if (shard.type === 'fly') {
+            // Flying shards completely detach and fly away
+            shard.mesh.position.copy(shard.velocity).multiplyScalar(progress * 0.6);
+            // Apply gravity simulation
+            shard.mesh.position.z += (progress * progress) * -3.0;
+            
+            // Rotate shards in flight
+            shard.mesh.rotation.x = shard.rotSpeed.x * progress;
+            shard.mesh.rotation.y = shard.rotSpeed.y * progress;
+            shard.mesh.rotation.z = shard.rotSpeed.z * progress;
+          } else {
+            // Hinging outer shards fold back like a tear seam
+            const hingeAngle = progress * 0.45;
+            shard.mesh.rotation.z = shard.originAngle + (Math.sin(hingeAngle) * 0.1);
+            shard.mesh.position.z = -progress * 0.22;
+          }
         });
 
-        // Update burst particles
+        // Particles trajectory updates
         const dt = Math.min(clock.getDelta(), 0.03);
         particles.forEach(p => {
           if (!p.active) return;
           p.mesh.position.addScaledVector(p.vel, dt);
           p.mesh.rotation.x += p.rotSpeed.x;
           p.mesh.rotation.y += p.rotSpeed.y;
-          // Apply gravity
-          p.vel.y -= 9.8 * dt;
-          
-          // Slow down particles
-          p.vel.multiplyScalar(0.95);
+          p.vel.y -= 9.8 * dt; // Gravity
+          p.vel.multiplyScalar(0.96); // Drag
         });
       }
 
-      // Camera Shake execution
+      // Camera Shake
       if (animState.cameraShake > 0.01) {
-        const shake = animState.cameraShake * 0.12;
+        const shake = animState.cameraShake * 0.15;
         camera.position.x = (Math.random() - 0.5) * shake;
         camera.position.y = 1.5 + (Math.random() - 0.5) * shake;
       } else {
@@ -326,7 +427,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
         camera.position.y = 1.5;
       }
 
-      // Ambient floating
+      // Floating paper prior to impact
       if (!isImpacted) {
         paperGroup.position.y = Math.sin(elapsed * 4) * 0.05;
         paperGroup.rotation.y = Math.cos(elapsed * 2) * 0.02;
@@ -337,7 +438,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
 
     animate();
 
-    // --- 6. Resize listener ---
+    // Resize listener
     const handleResize = () => {
       if (!containerRef.current) return;
       const w = window.innerWidth;
@@ -348,11 +449,12 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     };
     window.addEventListener('resize', handleResize);
 
-    // --- 7. Cleanup ---
+    // Cleanups
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
       timeline.kill();
+      document.body.style.overflow = ''; // Unlock scroll
       if (containerRef.current && renderer.domElement) {
         containerRef.current.removeChild(renderer.domElement);
       }
