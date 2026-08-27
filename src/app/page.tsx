@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ThreeDHero from '@/components/ThreeDHero';
+import IntroAnimation from '@/components/IntroAnimation';
 import { db, Product, Category } from '@/lib/db';
 import { useCart } from '@/context/CartContext';
 import { 
@@ -128,6 +129,7 @@ export default function Home() {
   const [activeServiceTab, setActiveServiceTab] = useState('all');
   const [serviceSearch, setServiceSearch] = useState('');
   const [isBannerOpen, setIsBannerOpen] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
   
   const { addToCart } = useCart();
 
@@ -191,6 +193,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      {showIntro && <IntroAnimation onComplete={() => setShowIntro(false)} />}
       
       {/* 1. HERO SECTION */}
       <section className="relative overflow-hidden pt-8 pb-16 md:py-20 lg:py-24 min-h-[85vh] flex items-center bg-transparent">
