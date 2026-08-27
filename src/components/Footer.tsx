@@ -94,11 +94,6 @@ export default function Footer() {
                   Contact Us
                 </Link>
               </li>
-              <li>
-                <Link href="/admin" className="hover:text-sky-700 transition-colors">
-                  Admin Panel Login
-                </Link>
-              </li>
             </ul>
           </div>
 
