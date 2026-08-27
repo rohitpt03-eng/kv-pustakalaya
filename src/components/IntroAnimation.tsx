@@ -265,6 +265,9 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       ease: 'power1.out'
     }, '-=0.5');
 
+    // Hold the final shattered state for 1.8 seconds (giving 3 seconds total splash screen time)
+    timeline.to({}, { duration: 1.8 });
+
     // --- 5. Frame Render loop ---
     let animId: number;
     const clock = new THREE.Clock();
