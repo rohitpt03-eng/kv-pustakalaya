@@ -29,8 +29,95 @@ import {
   FileCheck,
   CheckCircle2,
   ThumbsUp,
-  Coins
+  Coins,
+  Fingerprint,
+  Sprout,
+  Shield,
+  Smartphone,
+  HeartHandshake,
+  Plane,
+  Tractor,
+  GraduationCap,
+  Hammer,
+  Car,
+  Stethoscope,
+  Eye,
+  Copy,
+  Calendar,
+  FileSignature,
+  TrendingUp,
+  IndianRupee,
+  Home as HomeIcon
 } from 'lucide-react';
+
+interface ServiceItem {
+  name: string;
+  category: string;
+  desc: string;
+  icon: string;
+}
+
+const servicesList: ServiceItem[] = [
+  { name: 'PAN Card Services', category: 'gov', desc: 'New PAN Card applications and corrections assistance.', icon: 'credit-card' },
+  { name: 'Passport Services', category: 'gov', desc: 'Fresh passport applications, renewals, and slot bookings.', icon: 'file-text' },
+  { name: 'Aadhaar Print & Download', category: 'gov', desc: 'Secure biometric e-Aadhaar downloads and PVC card prints.', icon: 'fingerprint' },
+  { name: 'Photo Copy', category: 'utility', desc: 'B&W and color photocopying on high-quality paper.', icon: 'copy' },
+  { name: 'Online Forms Apply', category: 'student', desc: 'Job forms, admissions, exam registrations filled precisely.', icon: 'edit-3' },
+  { name: 'Electricity Bill Payment', category: 'utility', desc: 'Quick electricity bill check and payment collections.', icon: 'zap' },
+  { name: 'Voter ID Card', category: 'gov', desc: 'New Voter ID apply, voter slip prints, and corrections.', icon: 'user' },
+  { name: 'Farmer Registration', category: 'gov', desc: 'DBT agricultural portals registration and updates.', icon: 'sprout' },
+  { name: 'Digital Anudan', category: 'gov', desc: 'State subsidies, crop assistance, and government schemes.', icon: 'coins' },
+  { name: 'Mobile & DTH Recharge', category: 'utility', desc: 'Instant prepaid recharges and TV pack updates.', icon: 'smartphone' },
+  { name: 'All Vehicle Insurance', category: 'travel', desc: 'Two-wheeler and commercial vehicle insurance quotes.', icon: 'shield' },
+  { name: 'Lamination Services', category: 'utility', desc: 'Premium lamination to protect certificates and sheets.', icon: 'file' },
+  { name: 'Printout & Email', category: 'student', desc: 'Laser printing, documents scanning, and emailing.', icon: 'printer' },
+  { name: 'Life Certificate', category: 'gov', desc: 'Jeevan Pramaan digital certificate submission for pensioners.', icon: 'heart' },
+  { name: 'LIC Premium Collection', category: 'utility', desc: 'Authorized LIC policy premium payment receipt desk.', icon: 'check-square' },
+  { name: 'Train, Bus & Flight Booking', category: 'travel', desc: 'IRCTC train seats booking, bus & domestic flight tickets.', icon: 'plane' },
+  { name: 'PM Kisan Yojana', category: 'gov', desc: 'Kisan Samman Nidhi registry, e-KYC, and installment status.', icon: 'tractor' },
+  { name: 'Income Tax & GST filing', category: 'utility', desc: 'GST registrations, returns, and income tax file preparations.', icon: 'trending-up' },
+  { name: 'Scholarship Form Apply', category: 'student', desc: 'Bihar Post-matric, NSP, and central scholarship applications.', icon: 'graduation-cap' },
+  { name: 'Bihar Labour Registration', category: 'gov', desc: 'Labour card registrations and government subsidy updates.', icon: 'hammer' },
+  { name: 'Driving License Form', category: 'travel', desc: 'Learner & permanent driving license applications.', icon: 'car' },
+  { name: 'PM Fasal Bima Yojana', category: 'gov', desc: 'Government crop insurance scheme registrations.', icon: 'leaf' },
+  { name: 'Spoken English Course', category: 'student', desc: 'Enrolment and materials for spoken English learning programs.', icon: 'book' },
+  { name: 'Digital Doctor Consultation', category: 'health', desc: 'Fast online consultations with general physicians.', icon: 'stethoscope' }
+];
+
+const getServiceIcon = (iconName: string) => {
+  const props = { className: "w-5 h-5 text-sky-600" };
+  switch (iconName) {
+    case 'credit-card': return <CreditCard {...props} />;
+    case 'file-text': return <FileText {...props} />;
+    case 'fingerprint': return <Fingerprint {...props} />;
+    case 'copy': return <Copy {...props} />;
+    case 'edit-3': return <FileText {...props} />;
+    case 'zap': return <Zap {...props} />;
+    case 'sprout': return <Sprout {...props} />;
+    case 'coins': return <Coins {...props} />;
+    case 'smartphone': return <Smartphone {...props} />;
+    case 'shield': return <Shield {...props} />;
+    case 'file': return <FileText {...props} />;
+    case 'printer': return <Printer {...props} />;
+    case 'heart': return <Heart {...props} />;
+    case 'user-check': return <CheckCircle2 {...props} />;
+    case 'heart-handshake': return <HeartHandshake {...props} />;
+    case 'file-signature': return <FileSignature {...props} />;
+    case 'indian-rupee': return <IndianRupee {...props} />;
+    case 'home': return <HomeIcon {...props} />;
+    case 'check-square': return <CheckCircle2 {...props} />;
+    case 'plane': return <Plane {...props} />;
+    case 'tractor': return <Tractor {...props} />;
+    case 'trending-up': return <TrendingUp {...props} />;
+    case 'graduation-cap': return <GraduationCap {...props} />;
+    case 'hammer': return <Hammer {...props} />;
+    case 'car': return <Car {...props} />;
+    case 'leaf': return <Sprout {...props} />;
+    case 'book': return <BookOpen {...props} />;
+    case 'stethoscope': return <Stethoscope {...props} />;
+    default: return <Zap {...props} />;
+  }
+};
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -38,6 +125,9 @@ export default function Home() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [wishlist, setWishlist] = useState<string[]>([]);
+  const [activeServiceTab, setActiveServiceTab] = useState('all');
+  const [serviceSearch, setServiceSearch] = useState('');
+  const [isBannerOpen, setIsBannerOpen] = useState(false);
   
   const { addToCart } = useCart();
 
@@ -77,6 +167,13 @@ export default function Home() {
   ];
 
   const categoriesToDisplay = categories.filter(c => targetCategorySlugs.includes(c.slug));
+
+  const filteredServices = servicesList.filter(item => {
+    const matchesSearch = item.name.toLowerCase().includes(serviceSearch.toLowerCase()) || 
+                          item.desc.toLowerCase().includes(serviceSearch.toLowerCase());
+    const matchesTab = activeServiceTab === 'all' || item.category === activeServiceTab;
+    return matchesSearch && matchesTab;
+  });
 
   const testimonials = [
     { name: 'Aman Kumar', role: 'College Student', review: 'KV Pustakalaya is my primary source for competitive exam books. Prabhat Bhaiya always guides us with the latest editions, and their form filling service is incredibly fast and hassle-free!', rating: 5 },
@@ -401,81 +498,158 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. SERVICES SECTION (CSC & Cyber services) */}
+      {/* 5. SERVICES SECTION (CSC & Cyber services Hub) */}
       <section className="py-16 bg-white border-y border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
+          
+          {/* Header Title */}
+          <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
+            <span className="inline-block bg-sky-50 text-sky-850 border border-sky-100 rounded-full px-3.5 py-1 text-2xs font-extrabold uppercase tracking-wider">
+              E-Governance Desk
+            </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              More Than Just a Bookstore
+              KV Digitel Center & E-Services
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-2 font-medium">
-              We offer essential digital desk utilities and local financial service options for students and parents.
+            <p className="text-xs sm:text-sm text-slate-500 font-medium">
+              Authorized G2C digital service provider. Check verification IDs and search or filter our full services portfolio below.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            
-            <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 hover:shadow-sm transition-all flex flex-col justify-between">
-              <div className="bg-sky-100 text-sky-800 w-9 h-9 rounded-xl flex items-center justify-center mb-3.5">
-                <Coins className="w-4.5 h-4.5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-black text-slate-900">Cash Withdrawal</h3>
-                <p className="text-2xs text-slate-500 mt-1.5 leading-relaxed font-semibold">
-                  Aadhaar Cash Withdrawal (AEPS) and Micro ATM transactions for cash withdrawals at Harari Chowk.
-                </p>
-              </div>
+          {/* Verification IDs and View Banner Row */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
+            {/* CSC ID */}
+            <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-2xl border border-slate-100 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span className="text-2xs font-bold text-slate-500 uppercase tracking-wider">CSC ID:</span>
+              <span className="text-xs font-black text-slate-800 tracking-wide font-mono">264265140012</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 hover:shadow-sm transition-all flex flex-col justify-between">
-              <div className="bg-indigo-100 text-indigo-800 w-9 h-9 rounded-xl flex items-center justify-center mb-3.5">
-                <FileText className="w-4.5 h-4.5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-black text-slate-900">Online Form Filling</h3>
-                <p className="text-2xs text-slate-500 mt-1.5 leading-relaxed font-semibold">
-                  Submit job profiles, board entrance examinations, admissions, and prints cleanly.
-                </p>
-              </div>
+            {/* Sahaj ID */}
+            <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-2xl border border-slate-100 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span className="text-2xs font-bold text-slate-500 uppercase tracking-wider">Sahaj ID:</span>
+              <span className="text-xs font-black text-slate-800 tracking-wide font-mono">1036551836574228</span>
             </div>
 
-            <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 hover:shadow-sm transition-all flex flex-col justify-between">
-              <div className="bg-sky-100 text-sky-800 w-9 h-9 rounded-xl flex items-center justify-center mb-3.5">
-                <Printer className="w-4.5 h-4.5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-black text-slate-900">Photocopy & Printing</h3>
-                <p className="text-2xs text-slate-500 mt-1.5 leading-relaxed font-semibold">
-                  High-speed photocopying, color printing, laminations, and scan document processing services.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 hover:shadow-sm transition-all flex flex-col justify-between">
-              <div className="bg-indigo-100 text-indigo-800 w-9 h-9 rounded-xl flex items-center justify-center mb-3.5">
-                <Zap className="w-4.5 h-4.5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-black text-slate-900">CSC / Digital Services</h3>
-                <p className="text-2xs text-slate-500 mt-1.5 leading-relaxed font-semibold">
-                  CSC services including utility bills payment, pan card creation, and certificates updates.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 hover:shadow-sm transition-all flex flex-col justify-between">
-              <div className="bg-sky-100 text-sky-800 w-9 h-9 rounded-xl flex items-center justify-center mb-3.5">
-                <FileCheck className="w-4.5 h-4.5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-black text-slate-900">Exam & Document Desk</h3>
-                <p className="text-2xs text-slate-500 mt-1.5 leading-relaxed font-semibold">
-                  Get updates on board calendars, buy application forms booklets, and competitive guidebooks.
-                </p>
-              </div>
-            </div>
-
+            {/* View Original Banner Button */}
+            <button
+              onClick={() => setIsBannerOpen(true)}
+              className="flex items-center gap-1.5 px-4 py-2 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-100 rounded-2xl text-2xs font-black transition-all shadow-2xs"
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span>View Services Banner</span>
+            </button>
           </div>
+
+          {/* Search and Tabs filters */}
+          <div className="bg-slate-50 border border-slate-150/60 rounded-3xl p-4 sm:p-6 mb-8 space-y-4">
+            <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+              
+              {/* Tabs */}
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  { id: 'all', label: 'All Services' },
+                  { id: 'gov', label: 'Gov Certificates' },
+                  { id: 'utility', label: 'Banking & Bills' },
+                  { id: 'travel', label: 'Travel & Insurance' },
+                  { id: 'student', label: 'Student Desk' },
+                  { id: 'health', label: 'Health & Courses' }
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveServiceTab(tab.id)}
+                    className={`px-3 py-1.5 rounded-xl text-2xs font-black transition-all border ${
+                      activeServiceTab === tab.id
+                        ? 'bg-sky-650 text-white border-sky-600 shadow-xs'
+                        : 'bg-white hover:bg-slate-100 text-slate-600 border-slate-150'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Keyword Search */}
+              <div className="relative w-full md:max-w-xs shrink-0">
+                <input
+                  type="text"
+                  placeholder="Search certificate, utility bill, scheme..."
+                  value={serviceSearch}
+                  onChange={(e) => setServiceSearch(e.target.value)}
+                  className="w-full bg-white border border-slate-200 rounded-xl py-2 pl-3.5 pr-9 text-xs focus:outline-none focus:ring-2 focus:ring-sky-300 text-slate-900 placeholder-slate-400 font-semibold"
+                />
+                <Search className="w-4 h-4 text-slate-400 absolute right-3 top-2.5" />
+              </div>
+
+            </div>
+          </div>
+
+          {/* Filtered Services Grid */}
+          {filteredServices.length === 0 ? (
+            <div className="bg-slate-50 border border-slate-100 rounded-2xl p-10 text-center shadow-2xs space-y-2">
+              <span className="text-3xl block">🔍</span>
+              <h3 className="text-sm font-extrabold text-slate-800">No Services Found</h3>
+              <p className="text-xs text-slate-500 max-w-xs mx-auto">
+                No local digital service matches "{serviceSearch}". Try checking your spelling or select another tab!
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {filteredServices.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="group bg-slate-50 border border-slate-100 rounded-2xl p-4 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between"
+                >
+                  <div className="space-y-3">
+                    {/* Icon Header */}
+                    <div className="bg-white text-sky-700 w-9 h-9 rounded-xl flex items-center justify-center border border-slate-100 shadow-3xs group-hover:bg-sky-50 transition-colors">
+                      {getServiceIcon(item.icon)}
+                    </div>
+                    {/* Details */}
+                    <div>
+                      <h3 className="text-xs font-black text-slate-900 line-clamp-1">{item.name}</h3>
+                      <p className="text-[11px] text-slate-500 leading-relaxed font-semibold mt-1 line-clamp-2">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="pt-4 border-t border-slate-150/40 mt-4 flex items-center justify-between">
+                    <span className="text-[9px] font-extrabold uppercase text-sky-800 bg-sky-50 px-2 py-0.5 rounded border border-sky-100/50">
+                      {item.category === 'gov' ? 'Gov' : item.category === 'utility' ? 'Utility' : item.category === 'travel' ? 'Travel' : item.category === 'student' ? 'Student' : 'Health'}
+                    </span>
+                    <a
+                      href={`https://wa.me/918340383252?text=Hello%20KV%20Digitel%20Center,%20I%20want%20to%20inquire%20about%20${encodeURIComponent(item.name)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-emerald-700 hover:text-emerald-800 text-[10px] font-black flex items-center gap-1"
+                    >
+                      <MessageSquare className="w-3 h-3 fill-current text-emerald-600" />
+                      <span>Inquire</span>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Verification disclaimer info bar */}
+          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 text-xs font-semibold text-slate-500">
+            <div className="flex items-center gap-2">
+              <span className="text-xs">👤</span>
+              <span>Proprietor: <strong className="text-slate-800">Prabhat Prabhakar</strong></span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs">📞</span>
+              <span>Inquiries: <strong className="text-slate-800">7545011499, 8340383252</strong></span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs">🗺️</span>
+              <span>Shop 02, Harari Chowk, Marauna, Supaul, Bihar</span>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -776,6 +950,44 @@ export default function Home() {
                   <span>Order via WhatsApp</span>
                 </a>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SERVICES BANNER LIGHTBOX MODAL */}
+      {isBannerOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in animate-duration-200">
+          <div className="relative w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100 p-2 sm:p-4 max-h-[90vh] flex flex-col justify-between animate-scale-in">
+            <button
+              onClick={() => setIsBannerOpen(false)}
+              className="absolute top-4 right-4 z-10 bg-slate-900/90 hover:bg-slate-950 text-white p-2 rounded-full shadow-lg transition-all"
+              aria-label="Close lightbox"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="relative flex-grow min-h-[40vh] sm:min-h-[60vh] bg-slate-900 rounded-2xl overflow-hidden flex items-center justify-center">
+              <Image
+                src="/services-banner.jpg"
+                alt="KV Digitel Center & KV Pustakalaya Official Services Banner"
+                fill
+                className="object-contain"
+                sizes="(max-w-4xl) 100vw"
+                priority
+              />
+            </div>
+            
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-slate-500 px-2">
+              <p>KV Digitel Center & E-Governance Services Portal</p>
+              <a
+                href="/services-banner.jpg"
+                download="KV-Services-Banner.jpg"
+                className="text-sky-750 hover:underline flex items-center gap-1"
+              >
+                <span>Download Original Banner</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </a>
             </div>
           </div>
         </div>
