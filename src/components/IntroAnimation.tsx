@@ -11,25 +11,35 @@ interface IntroAnimationProps {
 export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isOverlayVisible, setIsOverlayVisible] = useState(true);
+  const [showBrand, setShowBrand] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Lock body scrolling
+    // Lock body scrolling during animation
     document.body.style.overflow = 'hidden';
 
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    // --- 1. Scene & Camera ---
+    // --- 1. Scene Setup & WebGL Safe Check ---
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf4f8fc);
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 1.5, 9);
+    camera.position.set(0, 1.5, 9.5);
     camera.lookAt(0, 0, 0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    } catch (e) {
+      console.error('WebGL is not supported on this browser/device.', e);
+      document.body.style.overflow = '';
+      onComplete();
+      return;
+    }
+
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(width, height);
     renderer.shadowMap.enabled = true;
@@ -62,7 +72,6 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     canvas.height = 512;
     const ctx = canvas.getContext('2d');
     if (ctx) {
-      // Frosted white background
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, 512, 512);
 
@@ -91,7 +100,6 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     }
     const paperTexture = new THREE.CanvasTexture(canvas);
 
-    // Paper Material with clearcoat & transparency
     const paperMaterial = new THREE.MeshPhysicalMaterial({
       map: paperTexture,
       transparent: true,
@@ -127,14 +135,13 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     const rootGroup = new THREE.Group();
     scene.add(rootGroup);
 
-    // --- 4. Shattered Paper Procedural Grid Creation ---
+    // --- 4. Shattered Paper Geometry Grid ---
     const paperGroup = new THREE.Group();
     rootGroup.add(paperGroup);
 
     const W = 3.6;
     const H = 5.0;
 
-    // Helper to get polar grid coordinates clamped to bounds
     const getPaperVertex = (r: number, theta: number) => {
       if (r === 0) return new THREE.Vector3(0, 0, 0);
       
@@ -142,7 +149,6 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       if (r === 1) radius = 0.3 + Math.random() * 0.15;
       else if (r === 2) radius = 0.95 + Math.random() * 0.25;
       else {
-        // Clamp concentric ring 3 to rectangular boundary
         const cosVal = Math.cos(theta);
         const sinVal = Math.sin(theta);
         const limitX = W / 2;
@@ -166,25 +172,24 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     }
 
     const shardList: ShardInfo[] = [];
-    const sectors = 12; // Radial divisions
+    const sectors = 12;
 
-    // Build the concentric mesh layers
     for (let s = 0; s < sectors; s++) {
       const theta1 = (s / sectors) * Math.PI * 2;
       const theta2 = ((s + 1) / sectors) * Math.PI * 2;
 
-      // Layer 0: Triangles meeting at Center
+      // Layer 0: Center Wedges
       const v0_0 = getPaperVertex(0, theta1);
       const v0_1 = getPaperVertex(1, theta1);
       const v0_2 = getPaperVertex(1, theta2);
 
-      // Layer 1: inner rings (quads split into 2 triangles)
+      // Layer 1: Inner Rings
       const v1_0 = getPaperVertex(1, theta1);
       const v1_1 = getPaperVertex(2, theta1);
       const v1_2 = getPaperVertex(2, theta2);
       const v1_3 = getPaperVertex(1, theta2);
 
-      // Layer 2: outer boundaries (quads split into 2 triangles)
+      // Layer 2: Outer Boundaries
       const v2_0 = getPaperVertex(2, theta1);
       const v2_1 = getPaperVertex(3, theta1);
       const v2_2 = getPaperVertex(3, theta2);
@@ -198,7 +203,6 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
           vC.x, vC.y, vC.z
         ]);
         
-        // Map UV coordinates relative to absolute layout bounding box
         const uvs = new Float32Array([
           (vA.x + W/2) / W, (vA.y + H/2) / H,
           (vB.x + W/2) / W, (vB.y + H/2) / H,
@@ -221,7 +225,6 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
         const originAngle = Math.atan2(centroid.y, centroid.x);
         const dir = new THREE.Vector3(centroid.x, centroid.y, 0).normalize();
 
-        // Velocity profiles based on layer distance
         const velocity = new THREE.Vector3();
         const rotSpeed = new THREE.Vector3(
           (Math.random() - 0.5) * 5,
@@ -244,19 +247,17 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
         });
       };
 
-      // Create Shards
+      // Construct shards
       addTriangle(v0_0, v0_1, v0_2, 'fly', 0);
-      
       addTriangle(v1_0, v1_1, v1_2, 'fly', 1);
       addTriangle(v1_0, v1_2, v1_3, 'fly', 1);
-
       addTriangle(v2_0, v2_1, v2_2, 'hinge', 2);
       addTriangle(v2_0, v2_2, v2_3, 'hinge', 2);
     }
 
-    // --- 5. Falling Pen Setup ---
+    // --- 5. Falling Pen Assembly ---
     const penGroup = new THREE.Group();
-    penGroup.position.set(0.1, 12, 0); // descent starting point
+    penGroup.position.set(0.1, 12, 0);
     penGroup.rotation.z = -0.15;
     scene.add(penGroup);
 
@@ -273,7 +274,20 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     penTip.castShadow = true;
     penGroup.add(penTip);
 
-    // Impact Sparks/Particles
+    // --- 6. Impact Shockwave Ring ---
+    const shockwaveGeo = new THREE.RingGeometry(0.1, 0.12, 32);
+    const shockwaveMat = new THREE.MeshBasicMaterial({
+      color: 0x9de8ff,
+      transparent: true,
+      opacity: 0.8,
+      side: THREE.DoubleSide
+    });
+    const shockwave = new THREE.Mesh(shockwaveGeo, shockwaveMat);
+    shockwave.position.set(0.1, -0.2, 0.02);
+    shockwave.visible = false;
+    scene.add(shockwave);
+
+    // Sparks & Particles
     const particleCount = 25;
     const particleGeometry = new THREE.OctahedronGeometry(0.06, 0);
     const particleMaterial = new THREE.MeshBasicMaterial({ color: 0x9de8ff });
@@ -291,7 +305,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       });
     }
 
-    // --- 6. GSAP Timeline ---
+    // --- 7. Animation Timeline ---
     const animState = {
       impactProgress: 0,
       cameraShake: 0
@@ -302,6 +316,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
 
     const timeline = gsap.timeline({
       onComplete: () => {
+        // Smoothly fade out screen overlay and show home page
         gsap.to(containerRef.current, {
           opacity: 0,
           duration: 0.35,
@@ -313,17 +328,34 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       }
     });
 
-    // Descent phase (0.35s)
+    // A. Descent & Camera Track zoom in (0.35s)
     timeline.to(penGroup.position, {
-      y: -0.2, // Pierces through the paper
+      y: -0.2,
       duration: 0.35,
       ease: 'power3.in',
       onComplete: () => {
         isImpacted = true;
         impactTime = clock.getElapsedTime();
         animState.cameraShake = 1.0;
-        
-        // Spawn sparks
+
+        // Trigger Shockwave expanding ring
+        shockwave.visible = true;
+        gsap.to(shockwave.scale, {
+          x: 25,
+          y: 25,
+          duration: 0.6,
+          ease: 'power2.out'
+        });
+        gsap.to(shockwaveMat, {
+          opacity: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+          onComplete: () => {
+            shockwave.visible = false;
+          }
+        });
+
+        // Trigger spark particles
         particles.forEach((p) => {
           p.mesh.position.set(0.1, -0.2, 0);
           p.mesh.visible = true;
@@ -339,33 +371,54 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
           );
         });
       }
-    });
+    }, 0);
 
-    // Deceleration & Shatter Progress
+    // Track camera forward during descent
+    timeline.to(camera.position, {
+      z: 7.5,
+      y: 0.8,
+      duration: 0.35,
+      ease: 'power2.in'
+    }, 0);
+
+    // B. Impact recoil & Camera snap back
     timeline.to(animState, {
       impactProgress: 1.0,
       duration: 0.38,
       ease: 'back.out(1.8)'
-    });
+    }, 0.35);
 
-    // Pen settles down slowly
     timeline.to(penGroup.position, {
       y: -0.9,
       duration: 0.6,
       ease: 'power2.out'
-    }, '-=0.38');
+    }, 0.35);
 
-    // Camera shake dampening
+    // Snap camera backward on impact for cinematic recoil
+    timeline.to(camera.position, {
+      z: 9.5,
+      y: 1.5,
+      duration: 0.5,
+      ease: 'power2.out'
+    }, 0.35);
+
+    // Dampen camera shake
     timeline.to(animState, {
       cameraShake: 0,
       duration: 0.5,
       ease: 'power1.out'
-    }, '-=0.5');
+    }, 0.35);
 
-    // Hold the shattered page layout for remaining delay (3 seconds total splash screen)
+    // C. Brand Moment Overlay Reveal (t = 0.8s)
+    timeline.to({}, {
+      duration: 0.1,
+      onStart: () => setShowBrand(true)
+    }, 0.8);
+
+    // Hold the completed state to show brand logo clearly
     timeline.to({}, { duration: 1.8 });
 
-    // --- 7. Frame Update loop ---
+    // --- 8. Frame Update loop ---
     let animId: number;
     const clock = new THREE.Clock();
 
@@ -377,7 +430,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       if (isImpacted) {
         const progress = animState.impactProgress;
         
-        // Physics Wobble / Rebound on Pen Tip
+        // Pen Wobble / Rebound decay
         const timeSinceImpact = elapsed - impactTime;
         if (timeSinceImpact > 0 && timeSinceImpact < 0.6) {
           const wobble = Math.sin(timeSinceImpact * 80) * 0.12 * Math.exp(-timeSinceImpact * 7);
@@ -385,35 +438,31 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
           penGroup.rotation.x = wobble * 0.5;
         }
 
-        // Shards animation
+        // Shards updates
         shardList.forEach((shard) => {
           if (shard.type === 'fly') {
-            // Flying shards completely detach and fly away
             shard.mesh.position.copy(shard.velocity).multiplyScalar(progress * 0.6);
-            // Apply gravity simulation
-            shard.mesh.position.z += (progress * progress) * -3.0;
+            shard.mesh.position.z += (progress * progress) * -3.0; // Gravity down Z
             
-            // Rotate shards in flight
             shard.mesh.rotation.x = shard.rotSpeed.x * progress;
             shard.mesh.rotation.y = shard.rotSpeed.y * progress;
             shard.mesh.rotation.z = shard.rotSpeed.z * progress;
           } else {
-            // Hinging outer shards fold back like a tear seam
             const hingeAngle = progress * 0.45;
             shard.mesh.rotation.z = shard.originAngle + (Math.sin(hingeAngle) * 0.1);
             shard.mesh.position.z = -progress * 0.22;
           }
         });
 
-        // Particles trajectory updates
+        // Sparks flight
         const dt = Math.min(clock.getDelta(), 0.03);
         particles.forEach(p => {
           if (!p.active) return;
           p.mesh.position.addScaledVector(p.vel, dt);
           p.mesh.rotation.x += p.rotSpeed.x;
           p.mesh.rotation.y += p.rotSpeed.y;
-          p.vel.y -= 9.8 * dt; // Gravity
-          p.vel.multiplyScalar(0.96); // Drag
+          p.vel.y -= 9.8 * dt;
+          p.vel.multiplyScalar(0.96);
         });
       }
 
@@ -427,7 +476,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
         camera.position.y = 1.5;
       }
 
-      // Floating paper prior to impact
+      // Pre-impact hover floating
       if (!isImpacted) {
         paperGroup.position.y = Math.sin(elapsed * 4) * 0.05;
         paperGroup.rotation.y = Math.cos(elapsed * 2) * 0.02;
@@ -438,7 +487,6 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
 
     animate();
 
-    // Resize listener
     const handleResize = () => {
       if (!containerRef.current) return;
       const w = window.innerWidth;
@@ -449,7 +497,7 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     };
     window.addEventListener('resize', handleResize);
 
-    // Cleanups
+    // Cleanups on unmount
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
@@ -469,6 +517,20 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       ref={containerRef}
       className="fixed inset-0 z-[9999] bg-[#f4f8fc] w-screen h-screen overflow-hidden select-none pointer-events-auto"
       style={{ willChange: 'opacity' }}
-    />
+    >
+      {/* 6. BRAND MOMENT overlay screen */}
+      {showBrand && (
+        <div className="absolute inset-0 flex items-center justify-center z-50 text-center pointer-events-none px-4 bg-slate-950/5 backdrop-blur-3xs animate-fade-in animate-duration-500">
+          <div className="bg-white/70 backdrop-blur-md border border-white/60 p-8 rounded-3xl shadow-xl flex flex-col items-center max-w-sm animate-scale-in">
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 font-sans">
+              KV Pustakalaya
+            </h1>
+            <p className="text-sm font-bold text-sky-850 font-serif italic mt-2">
+              “पढ़ाई का Perfect Partner”
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
