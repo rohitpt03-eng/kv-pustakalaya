@@ -721,14 +721,51 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. ABOUT LOCAL STORY */}
-      <section className="py-14 bg-white border-y border-slate-100">
-        <div className="max-w-4xl mx-auto px-4 text-center space-y-4">
-          <span className="text-xs font-bold text-sky-700 bg-sky-50 border border-sky-100 rounded-full px-3 py-1">Local Business Story</span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Trusted Stationery Destination at Harari Chowk</h2>
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-semibold">
-            Founded by Prabhat Kumar Prabhakar, KV Pustakalaya has grown into a cornerstone for educational supplies at Harari Chowk. We strive to provide premium stationery, competitive examination publications, school notebooks, and fast digital form-filling portals. We exist to be your perfect learning partner.
-          </p>
+      {/* 7. ABOUT LOCAL STORY & FOUNDER */}
+      <section className="py-16 bg-white border-y border-slate-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            
+            {/* Owner Image Left Column */}
+            <div className="md:col-span-5 flex justify-center md:justify-end">
+              <div className="relative group w-64 h-72 sm:w-72 sm:h-80 rounded-3xl overflow-hidden border border-slate-200/80 shadow-md bg-slate-50 transition-all duration-300 hover:shadow-lg">
+                <Image
+                  src="/owner.jpg"
+                  alt="Prabhat Kumar Prabhakar - Founder of KV Pustakalaya"
+                  fill
+                  className="object-cover object-top transition-transform duration-500 group-hover:scale-103"
+                  sizes="(max-w-768px) 100vw, 300px"
+                />
+                {/* Info Overlay Card */}
+                <div className="absolute bottom-4 left-4 right-4 bg-white/80 backdrop-blur-md border border-white/60 p-3 rounded-2xl shadow-sm text-center">
+                  <h3 className="text-sm font-black text-slate-900">Prabhat Kumar Prabhakar</h3>
+                  <p className="text-[10px] text-sky-850 font-bold tracking-wider uppercase mt-0.5">Founder & Proprietor</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Local Story Right Column */}
+            <div className="md:col-span-7 space-y-4 text-center md:text-left">
+              <span className="inline-block bg-sky-50 text-sky-850 border border-sky-100 rounded-full px-3 py-1 text-2xs font-extrabold uppercase tracking-wider">
+                Founder Message
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                Trusted Stationery Partner at Harari Chowk
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-semibold">
+                Founded by Prabhat Kumar Prabhakar, KV Pustakalaya has grown into a cornerstone for educational supplies and digital solutions at Harari Chowk.
+              </p>
+              <p className="text-xs sm:text-sm text-slate-550 leading-relaxed font-semibold">
+                "Our mission is to support every student's learning journey by providing genuine Classmate registers, NCERT textbooks, competitive guides, and quick digital services. Your trust is our responsibility, and we strive to serve Harari Chowk with dedication."
+              </p>
+              <div className="pt-2">
+                <span className="text-sm font-serif italic text-sky-750 font-black">
+                  “पढ़ाई का Perfect Partner”
+                </span>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
