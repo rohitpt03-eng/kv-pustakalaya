@@ -5,9 +5,11 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { db, Product, Category } from '@/lib/db';
-import { Search, MessageSquare, X, SlidersHorizontal, Grid, ChevronRight } from 'lucide-react';
+import { Search, MessageSquare, X, SlidersHorizontal, Grid, ChevronRight, ShoppingBag } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
 
 function ProductsContent() {
+  const { addToCart } = useCart();
   const searchParams = useSearchParams();
   const navbarQuery = searchParams ? searchParams.get('search') || '' : '';
 
@@ -255,15 +257,22 @@ function ProductsContent() {
                         </span>
                       </div>
 
-                      <div className="pt-2">
+                      <div className="grid grid-cols-2 gap-1.5 pt-2">
+                        <button
+                          onClick={() => addToCart(product)}
+                          className="bg-sky-50 hover:bg-sky-100 text-sky-850 text-2xs sm:text-xs font-black py-2 rounded-lg transition-colors border border-sky-100 flex items-center justify-center gap-1 shadow-2xs"
+                        >
+                          <ShoppingBag className="w-3.5 h-3.5 text-sky-700" />
+                          <span>Add</span>
+                        </button>
                         <a
-                          href={`https://wa.me/918340383252?text=Hello%20KV%20Pustakalaya,%20I%20want%20to%20buy%20${encodeURIComponent(product.name)}%20for%20Rs.%20${product.price}`}
+                          href={`https://wa.me/918340383252?text=Hello%20KV%20Pustakalaya,%20I%2520want%2520to%2520order%2520${encodeURIComponent(product.name)}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full flex items-center justify-center gap-1.5 bg-[#B9D9FF]/40 hover:bg-[#B9D9FF]/70 text-[#17202A] py-2.5 rounded-xl font-extrabold text-xs transition-colors border border-white/50 shadow-sm"
+                          className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-2xs sm:text-xs font-black py-2 rounded-lg transition-colors border border-emerald-100 flex items-center justify-center gap-1 shadow-2xs"
                         >
-                          <MessageSquare className="w-3.5 h-3.5 text-sky-800 fill-current" />
-                          <span>Inquire via WhatsApp</span>
+                          <MessageSquare className="w-3.5 h-3.5 fill-current" />
+                          <span>Inquire</span>
                         </a>
                       </div>
                     </div>
@@ -331,15 +340,25 @@ function ProductsContent() {
                 </div>
               </div>
 
-              <div className="pt-6">
+              <div className="pt-6 space-y-2">
+                <button
+                  onClick={() => {
+                    addToCart(selectedProduct);
+                    setSelectedProduct(null);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-700 text-white py-2.5 rounded-xl font-bold text-sm transition-all shadow-md"
+                >
+                  <ShoppingBag className="w-4 h-4" />
+                  <span>Add to Cart</span>
+                </button>
                 <a
-                  href={`https://wa.me/918340383252?text=Hello%20KV%20Pustakalaya,%20I%20want%20to%20buy%20${encodeURIComponent(selectedProduct.name)}%20for%20Rs.%20${selectedProduct.price}`}
+                  href={`https://wa.me/918340383252?text=Hello%20KV%20Pustakalaya,%20I%2520want%2520to%2520buy%2520${encodeURIComponent(selectedProduct.name)}%2520for%2520Rs.%2520${selectedProduct.price}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#9DE8FF]/60 to-[#B9D9FF]/60 hover:from-[#9DE8FF]/80 hover:to-[#B9D9FF]/80 text-[#17202A] py-3 rounded-xl font-extrabold text-sm transition-all border border-white/50 shadow-sm"
+                  className="w-full flex items-center justify-center gap-2 bg-emerald-650 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs transition-all shadow-sm"
                 >
-                  <MessageSquare className="w-4 h-4 fill-current text-sky-800" />
-                  <span>Send WhatsApp Inquiry</span>
+                  <MessageSquare className="w-4 h-4 fill-current" />
+                  <span>Order via WhatsApp</span>
                 </a>
               </div>
             </div>
