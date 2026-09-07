@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ThreeDHero from '@/components/ThreeDHero';
 import IntroAnimation from '@/components/IntroAnimation';
+import ThreeDDeskStudio from '@/components/ThreeDDeskStudio';
 import { db, Product, Category } from '@/lib/db';
 import { useCart } from '@/context/CartContext';
 import { 
@@ -240,128 +241,229 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Hero Column - Floating Product Composition & Badges */}
-            <div className="lg:col-span-6 flex justify-center w-full relative pt-10 lg:pt-0">
-              
-              {/* Main composition container */}
-              <div className="relative w-full max-w-md aspect-square rounded-3xl bg-gradient-to-tr from-white/40 to-sky-50/20 p-4 border border-white/50 shadow-xl backdrop-blur-md flex items-center justify-center">
-                
-                {/* Floating trust badge: Trusted Local Store */}
-                <div className="absolute -top-4 -left-4 bg-white/95 border border-slate-100 px-4 py-2 rounded-2xl shadow-md flex items-center gap-2 animate-float-slow z-20">
-                  <span className="text-sm">📍</span>
-                  <span className="text-2xs font-extrabold text-slate-800">Trusted Local Store</span>
-                </div>
-
-                {/* Floating trust badge: Quality Products */}
-                <div className="absolute bottom-6 -right-6 bg-white/95 border border-slate-100 px-4 py-2 rounded-2xl shadow-md flex items-center gap-2 animate-float-medium z-20">
-                  <span className="text-sm">⭐</span>
-                  <span className="text-2xs font-extrabold text-slate-800">Quality Products</span>
-                </div>
-
-                {/* Floating trust badge: Easy Shopping */}
-                <div className="absolute top-1/3 -right-8 bg-white/95 border border-slate-100 px-4 py-2 rounded-2xl shadow-md flex items-center gap-2 animate-float-slow delay-500 z-20">
-                  <span className="text-sm">🛍️</span>
-                  <span className="text-2xs font-extrabold text-slate-800">Easy Shopping</span>
-                </div>
-
-                {/* Layered Product Images mockup */}
-                <div className="w-full h-full relative rounded-2xl overflow-hidden border-2 border-white/80 shadow-inner flex items-center justify-center bg-sky-50/30">
-                  <div className="grid grid-cols-2 grid-rows-2 gap-3 w-full h-full p-3">
-                    {/* Notebook grid entry */}
-                    <div className="relative rounded-xl overflow-hidden border border-white shadow-2xs group">
-                      <Image 
-                        src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=300&auto=format&fit=crop&q=60" 
-                        alt="Premium Notebooks" 
-                        fill 
-                        className="object-cover transition-transform group-hover:scale-105" 
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent flex items-end p-2.5">
-                        <span className="text-[10px] font-bold text-white uppercase tracking-wider">Notebooks</span>
-                      </div>
-                    </div>
-                    {/* Pens grid entry */}
-                    <div className="relative rounded-xl overflow-hidden border border-white shadow-2xs group">
-                      <Image 
-                        src="https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=300&auto=format&fit=crop&q=60" 
-                        alt="Branded Pens" 
-                        fill 
-                        className="object-cover transition-transform group-hover:scale-105" 
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent flex items-end p-2.5">
-                        <span className="text-[10px] font-bold text-white uppercase tracking-wider">Pens & Markers</span>
-                      </div>
-                    </div>
-                    {/* Exam books grid entry */}
-                    <div className="relative rounded-xl overflow-hidden border border-white shadow-2xs group">
-                      <Image 
-                        src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=300&auto=format&fit=crop&q=60" 
-                        alt="Competitive Exam Books" 
-                        fill 
-                        className="object-cover transition-transform group-hover:scale-105" 
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent flex items-end p-2.5">
-                        <span className="text-[10px] font-bold text-white uppercase tracking-wider">Exam Guides</span>
-                      </div>
-                    </div>
-                    {/* Geometry box entry */}
-                    <div className="relative rounded-xl overflow-hidden border border-white shadow-2xs group">
-                      <Image 
-                        src="https://images.unsplash.com/photo-1416339306562-f3d12fefd36f?w=300&auto=format&fit=crop&q=60" 
-                        alt="Geometry Boxes" 
-                        fill 
-                        className="object-cover transition-transform group-hover:scale-105" 
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent flex items-end p-2.5">
-                        <span className="text-[10px] font-bold text-white uppercase tracking-wider">Supplies</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
+            {/* Right Hero Column - Interactive 3D Study Desk Studio from Stitch */}
+            <div className="lg:col-span-6 flex justify-center w-full relative pt-6 lg:pt-0">
+              <ThreeDDeskStudio />
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* 2. CATEGORY SECTION */}
-      <section className="py-16 bg-white border-y border-slate-100">
+      {/* QUICK STATS & CREDENTIALS BANNER (From Stitch Design System) */}
+      <section className="w-full bg-slate-900 text-white py-6 shadow-inner border-y border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Shop by Category
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-2 font-medium">
-              Find exactly what you need sorted into our premium curated categories.
-            </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div className="flex flex-col items-center">
+              <span className="text-2xl sm:text-3xl font-black text-amber-400">100%</span>
+              <span className="text-xs sm:text-sm text-slate-300 font-bold mt-0.5">Genuine Editions & Paper</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-2xl sm:text-3xl font-black text-sky-400">24+</span>
+              <span className="text-xs sm:text-sm text-slate-300 font-bold mt-0.5">Govt & Digital Services</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-2xl sm:text-3xl font-black text-emerald-400">09 AM - 08 PM</span>
+              <span className="text-xs sm:text-sm text-slate-300 font-bold mt-0.5">Open All 7 Days</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-2xl sm:text-3xl font-black text-rose-400">5,000+</span>
+              <span className="text-xs sm:text-sm text-slate-300 font-bold mt-0.5">Students & Families Served</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. CATEGORY SECTION (Stitch Bento Grid + Quick Links) */}
+      <section className="py-16 sm:py-20 bg-white border-y border-slate-100" id="stationery-catalog">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-sky-850 font-extrabold text-2xs uppercase tracking-wider mb-2">
+                <Sparkles className="w-3.5 h-3.5 text-sky-600" />
+                <span>Stationery & Study Depot</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                Shop by Category
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium">
+                Find exactly what you need sorted into our premium curated educational categories.
+              </p>
+            </div>
+            <a 
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-sky-700 hover:text-sky-850 font-bold transition-colors" 
+              href="https://wa.me/918340383252?text=Hello%20KV%20Pustakalaya,%20please%20share%20the%20complete%20stationery%20price%20list" 
+              rel="noopener noreferrer" 
+              target="_blank"
+            >
+              <span>Request Full Price List via WhatsApp</span>
+              <ChevronRight className="w-4 h-4" />
+            </a>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
-            {categoriesToDisplay.map((category) => (
-              <Link
-                key={category.slug}
-                href={`/category/${category.slug}`}
-                className="group flex flex-col items-center bg-slate-50 hover:bg-sky-50 border border-slate-100 hover:border-sky-100 rounded-2xl p-4 transition-all hover:scale-103 shadow-2xs"
-              >
-                <div className="relative w-14 h-14 rounded-full overflow-hidden bg-white shadow-inner flex items-center justify-center mb-3">
-                  <Image
-                    src={category.image}
-                    alt={category.name}
-                    width={56}
-                    height={56}
-                    className="object-cover w-full h-full group-hover:scale-108 transition-transform"
-                  />
+          {/* 4 High-Impact Category Bento Cards from Stitch */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            {/* Category 1: Notebooks */}
+            <Link 
+              href="/category/notebooks"
+              className="group flex flex-col rounded-2xl bg-slate-50 border border-slate-100 p-4 shadow-2xs hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+            >
+              <div className="relative h-48 w-full rounded-xl overflow-hidden mb-4 bg-slate-200">
+                <Image 
+                  src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=600&auto=format&fit=crop&q=80" 
+                  alt="Classmate & Solo Notebooks" 
+                  fill 
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full">
+                  Classmate & Solo
                 </div>
-                <span className="text-xs font-black text-slate-800 text-center group-hover:text-sky-850 transition-colors line-clamp-1">
-                  {category.name}
+              </div>
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-base font-black text-slate-900">Notebooks</h3>
+                <ChevronRight className="w-4 h-4 text-sky-600 group-hover:translate-x-1 transition-transform" />
+              </div>
+              <p className="text-xs text-slate-500 mb-4 line-clamp-2">
+                Classmate registers, spiral pads, ruled long books, graph copies & practical record sheets.
+              </p>
+              <div className="mt-auto pt-2 flex items-center justify-between border-t border-slate-200/60">
+                <span className="text-xs font-black text-sky-700">Starts @ ₹25</span>
+                <span className="text-2xs font-extrabold text-slate-500 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
+                  Explore →
                 </span>
-                <span className="text-[10px] font-semibold text-slate-400 mt-0.5">
-                  {category.count} items
+              </div>
+            </Link>
+
+            {/* Category 2: Pens & Markers */}
+            <Link 
+              href="/category/stationery"
+              className="group flex flex-col rounded-2xl bg-slate-50 border border-slate-100 p-4 shadow-2xs hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+            >
+              <div className="relative h-48 w-full rounded-xl overflow-hidden mb-4 bg-slate-200">
+                <Image 
+                  src="https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=600&auto=format&fit=crop&q=80" 
+                  alt="Reynolds, Hauser, Linc Pens" 
+                  fill 
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full">
+                  Hauser, Reynolds, Linc
+                </div>
+              </div>
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-base font-black text-slate-900">Pens & Markers</h3>
+                <ChevronRight className="w-4 h-4 text-sky-600 group-hover:translate-x-1 transition-transform" />
+              </div>
+              <p className="text-xs text-slate-500 mb-4 line-clamp-2">
+                Gel pens, smooth ballpoints, permanent markers, soft pastel highlighters & fountain refills.
+              </p>
+              <div className="mt-auto pt-2 flex items-center justify-between border-t border-slate-200/60">
+                <span className="text-xs font-black text-sky-700">Starts @ ₹10</span>
+                <span className="text-2xs font-extrabold text-slate-500 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
+                  Explore →
                 </span>
-              </Link>
-            ))}
+              </div>
+            </Link>
+
+            {/* Category 3: Exam Guides & Books */}
+            <Link 
+              href="/category/exam-books"
+              className="group flex flex-col rounded-2xl bg-slate-50 border border-slate-100 p-4 shadow-2xs hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+            >
+              <div className="relative h-48 w-full rounded-xl overflow-hidden mb-4 bg-slate-200">
+                <Image 
+                  src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=600&auto=format&fit=crop&q=80" 
+                  alt="NCERT & Competition Books" 
+                  fill 
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full">
+                  NCERT & Competition
+                </div>
+              </div>
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-base font-black text-slate-900">Exam Guides & Books</h3>
+                <ChevronRight className="w-4 h-4 text-sky-600 group-hover:translate-x-1 transition-transform" />
+              </div>
+              <p className="text-xs text-slate-500 mb-4 line-clamp-2">
+                NCERT Class 6-12, CBSE question banks, BPSC, SSC, Railway prep guides & model sets.
+              </p>
+              <div className="mt-auto pt-2 flex items-center justify-between border-t border-slate-200/60">
+                <span className="text-xs font-black text-sky-700">Latest 2025-26 Eds</span>
+                <span className="text-2xs font-extrabold text-slate-500 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
+                  Explore →
+                </span>
+              </div>
+            </Link>
+
+            {/* Category 4: Study & Art Supplies */}
+            <Link 
+              href="/category/school-supplies"
+              className="group flex flex-col rounded-2xl bg-slate-50 border border-slate-100 p-4 shadow-2xs hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+            >
+              <div className="relative h-48 w-full rounded-xl overflow-hidden mb-4 bg-slate-200">
+                <Image 
+                  src="https://images.unsplash.com/photo-1416339306562-f3d12fefd36f?w=600&auto=format&fit=crop&q=80" 
+                  alt="Camlin & Doms Art Supplies" 
+                  fill 
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full">
+                  Camlin & Doms
+                </div>
+              </div>
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-base font-black text-slate-900">Study & Art Supplies</h3>
+                <ChevronRight className="w-4 h-4 text-sky-600 group-hover:translate-x-1 transition-transform" />
+              </div>
+              <p className="text-xs text-slate-500 mb-4 line-clamp-2">
+                Student geometry boxes with compass, drafting scales, Doms sketch colors & glue sticks.
+              </p>
+              <div className="mt-auto pt-2 flex items-center justify-between border-t border-slate-200/60">
+                <span className="text-xs font-black text-sky-700">Starts @ ₹20</span>
+                <span className="text-2xs font-extrabold text-slate-500 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
+                  Explore →
+                </span>
+              </div>
+            </Link>
           </div>
+
+          {/* Quick Category Navigation Pill Grid */}
+          <div className="border-t border-slate-100 pt-8">
+            <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider text-center mb-6">
+              All Categories at a Glance
+            </h4>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+              {categoriesToDisplay.map((category) => (
+                <Link
+                  key={category.slug}
+                  href={`/category/${category.slug}`}
+                  className="group flex items-center gap-3 bg-slate-50/80 hover:bg-sky-50 border border-slate-100 hover:border-sky-200 rounded-xl p-2.5 transition-all shadow-2xs hover:scale-102"
+                >
+                  <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-white shadow-inner shrink-0">
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      width={40}
+                      height={40}
+                      className="object-cover w-full h-full group-hover:scale-110 transition-transform"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-xs font-bold text-slate-800 group-hover:text-sky-850 transition-colors block truncate">
+                      {category.name}
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-medium block">
+                      {category.count} items
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
         </div>
       </section>
 
