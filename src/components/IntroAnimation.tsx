@@ -497,8 +497,16 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     };
     window.addEventListener('resize', handleResize);
 
+    // Safety fallback: guaranteed auto-dismiss after 3.2s
+    const safetyTimer = setTimeout(() => {
+      document.body.style.overflow = '';
+      setIsOverlayVisible(false);
+      onComplete();
+    }, 3200);
+
     // Cleanups on unmount
     return () => {
+      clearTimeout(safetyTimer);
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
       timeline.kill();
@@ -510,6 +518,12 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
     };
   }, []);
 
+  const handleDismiss = () => {
+    document.body.style.overflow = '';
+    setIsOverlayVisible(false);
+    onComplete();
+  };
+
   if (!isOverlayVisible) return null;
 
   return (
@@ -518,6 +532,14 @@ export default function IntroAnimation({ onComplete }: IntroAnimationProps) {
       className="fixed inset-0 z-[9999] bg-[#f4f8fc] w-screen h-screen overflow-hidden select-none pointer-events-auto"
       style={{ willChange: 'opacity' }}
     >
+      {/* Skip Button */}
+      <button 
+        onClick={handleDismiss}
+        className="absolute top-5 right-5 z-[100] px-4 py-1.5 rounded-full bg-slate-900/60 hover:bg-slate-900 text-white text-xs font-bold backdrop-blur-md border border-white/20 shadow-md transition-all cursor-pointer pointer-events-auto"
+      >
+        Skip ✕
+      </button>
+
       {/* 6. BRAND MOMENT overlay screen */}
       {showBrand && (
         <div className="absolute inset-0 flex items-center justify-center z-50 text-center pointer-events-none px-4 bg-slate-950/5 backdrop-blur-3xs animate-fade-in animate-duration-500">
