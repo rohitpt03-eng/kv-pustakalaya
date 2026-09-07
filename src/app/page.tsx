@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import ThreeDHero from '@/components/ThreeDHero';
 import IntroAnimation from '@/components/IntroAnimation';
 import ThreeDDeskStudio from '@/components/ThreeDDeskStudio';
 import { db, Product, Category } from '@/lib/db';
@@ -130,7 +129,7 @@ export default function Home() {
   const [activeServiceTab, setActiveServiceTab] = useState('all');
   const [serviceSearch, setServiceSearch] = useState('');
   const [isBannerOpen, setIsBannerOpen] = useState(false);
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(false);
   
   const { addToCart } = useCart();
 
@@ -139,12 +138,23 @@ export default function Home() {
     setProducts(db.getProducts());
     setCategories(db.getCategories());
     
+    // Check if intro has already been displayed in this browser session
+    const introAlreadySeen = sessionStorage.getItem('kv_intro_shown');
+    if (!introAlreadySeen) {
+      setShowIntro(true);
+    }
+
     // Load wishlist
     const storedWishlist = localStorage.getItem('kv_wishlist');
     if (storedWishlist) {
       setWishlist(JSON.parse(storedWishlist));
     }
   }, []);
+
+  const handleIntroComplete = () => {
+    setShowIntro(false);
+    sessionStorage.setItem('kv_intro_shown', 'true');
+  };
 
   const toggleWishlist = (id: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -194,12 +204,13 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {showIntro && <IntroAnimation onComplete={() => setShowIntro(false)} />}
+      {showIntro && <IntroAnimation onComplete={handleIntroComplete} />}
       
       {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-8 pb-16 md:py-20 lg:py-24 min-h-[85vh] flex items-center bg-transparent">
-        {/* Background 3D Book Animation */}
-        <ThreeDHero />
+      <section className="relative overflow-hidden pt-8 pb-16 md:py-20 lg:py-24 min-h-[85vh] flex items-center bg-gradient-to-b from-sky-50/60 via-white to-slate-50/40">
+        {/* Subtle glowing ambient circles */}
+        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-sky-200/25 blur-3xl pointer-events-none"></div>
+        <div className="absolute top-1/3 right-0 w-[480px] h-[480px] rounded-full bg-indigo-100/20 blur-3xl pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
