@@ -21,14 +21,21 @@ export default function ThreeDDeskStudio() {
 
     const isMobile = window.innerWidth < 768;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: !isMobile });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.0 : 1.5));
-    renderer.shadowMap.enabled = !isMobile;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
-    container.appendChild(renderer.domElement);
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: !isMobile });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.0 : 1.5));
+      renderer.shadowMap.enabled = !isMobile;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
+      container.appendChild(renderer.domElement);
+    } catch (e) {
+      console.warn('WebGL initialization skipped or unsupported in this browser.', e);
+      setIsLoaded(true);
+      return;
+    }
 
     // 2. Lighting Setup
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
